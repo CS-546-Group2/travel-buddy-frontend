@@ -1,0 +1,23 @@
+{
+  "name": "travel-buddy-frontend",
+  "version": "1.0.0",
+  "description": "This is the frontend for the Travel Buddy app. Built with vanilla HTML, CSS, and JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CS-546-Group2/travel-buddy-frontend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS-546-Group2/travel-buddy-frontend/issues"
+  },
+  "homepage": "https://github.com/CS-546-Group2/travel-buddy-frontend#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
