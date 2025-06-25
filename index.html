@@ -5,11 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Travel Buddy</title>
     <link rel="stylesheet" href="css/index.css" />
+    <style>
+      #result {
+        background: #f4f4f4;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 5px;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+    </style>
   </head>
   <body>
     <h1>Welcome to Travel Buddy</h1>
     <p>Your AI travel planner is coming soon...</p>
 
+    <div>
+      <input type="text" id="userId" placeholder="Enter User ID" />
+      <input type="text" id="tripId" placeholder="Enter Trip ID" />
+      <button id="fetchTrip">Fetch Trip</button>
+    </div>
+
+    <div id="result"></div>
+
     <script src="js/main.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>

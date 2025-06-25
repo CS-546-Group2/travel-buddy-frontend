@@ -34,6 +34,17 @@ You can view this frontend locally using any static file server.
 
 ---
 
+## 📡 Backend Connection
+
+The frontend connects to the backend via API at:
+```
+http://localhost:5000/api/
+```
+
+Make sure the backend is running separately for full functionality.
+
+---
+
 ## 👥 Branching & Collaboration Workflow
 
 We use a structured branching strategy to keep our work organized.
