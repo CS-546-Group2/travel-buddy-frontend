@@ -1,35 +1,47 @@
 // js/app.js
 
-// Ping test (optional)
+// Optional ping check
 fetch(`${appConfig.API_BASE}/ping`)
   .then(res => res.json())
   .then(data => console.log('🌐 Backend says:', data.message))
   .catch(err => console.error('❌ Could not connect to backend:', err));
 
-// Trip fetcher
-document.getElementById('fetchTrip').addEventListener('click', () => {
-  const userId = document.getElementById('userId').value.trim();
-  const tripId = document.getElementById('tripId').value.trim();
+// Login + Fetch trips & collaborations
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
   const resultBox = document.getElementById('result');
 
-  resultBox.textContent = 'Loading...';
+  resultBox.textContent = '🔐 Logging in...';
 
-  if (!userId || !tripId) {
-    resultBox.textContent = 'Please enter both User ID and Trip ID.';
+  if (!username || !password) {
+    resultBox.textContent = '❌ Please enter both username and password.';
     return;
   }
 
-  const url = `${appConfig.API_BASE}/trips/${userId}/${tripId}`;
-
-  fetch(url)
+  fetch(`${appConfig.API_BASE}/users/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  })
     .then(res => {
-      if (!res.ok) throw new Error('Trip not found');
+      if (!res.ok) throw new Error('Invalid credentials');
       return res.json();
     })
-    .then(data => {
-      resultBox.textContent = JSON.stringify(data, null, 2);
+    .then(user => {
+      resultBox.textContent = `✅ Logged in as ${user.username}!\nFetching trips and collaborations...`;
+
+      return Promise.all([
+        fetch(`${appConfig.API_BASE}/trips/user/${user._id}`).then(r => r.json()),
+        fetch(`${appConfig.API_BASE}/collaboration/user/${user._id}`).then(r => r.json())
+      ]).then(([trips, collabs]) => {
+        resultBox.textContent =
+          `👤 User:\n${JSON.stringify(user, null, 2)}\n\n` +
+          `🧳 Trips:\n${JSON.stringify(trips, null, 2)}\n\n` +
+          `🤝 Collaborations:\n${JSON.stringify(collabs, null, 2)}`;
+      });
     })
     .catch(err => {
-      resultBox.textContent = `Error: ${err.message}`;
+      resultBox.textContent = `❌ Login error: ${err.message}`;
     });
 });

@@ -17,7 +17,7 @@ You can view this frontend locally using any static file server.
 
 2. Run the server:
    ```bash
-   npx live-server
+   npm start
    ```
 
    This will open `index.html` in your browser at `http://127.0.0.1:8080` (or similar).
