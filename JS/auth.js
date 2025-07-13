@@ -1,4 +1,4 @@
-// Auth page functionality
+// Auth page functionality with backend integration
 document.addEventListener('DOMContentLoaded', function() {
   // Get DOM elements
   const loginToggle = document.getElementById('login-toggle');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
   loginToggle.addEventListener('click', switchToLogin);
   signupToggle.addEventListener('click', switchToSignup);
 
-  // Form submission handlers
+  // Backend login integration
   loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -47,30 +47,70 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Simulate login process
+    // Use email as username for now, or map to correct usernames
+    let username = email.split('@')[0];
+    
+    // Map common email patterns to correct usernames
+    if (email === 'alice.smith@example.com') {
+      username = 'asmith';
+    } else if (email === 'bob.johnson@example.com') {
+      username = 'bjohnson';
+    }
+    
     showMessage('Signing you in...', 'info');
     
-    setTimeout(() => {
+    // Call backend login endpoint
+    fetch(`${appConfig.API_BASE}/users/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Invalid credentials');
+      }
+      return res.json();
+    })
+    .then(user => {
       showMessage('Welcome back! Redirecting...', 'success');
-      // Redirect to dashboard or home page
+      
+      // Store user data in localStorage for future use
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      
+      // Redirect to dashboard
       setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = './dashboard.html';
       }, 1500);
-    }, 1000);
+    })
+    .catch(err => {
+      console.error('Login error:', err);
+      showMessage('Login failed: ' + err.message, 'error');
+    });
   });
 
+  // Backend signup integration
   signupForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
     const firstname = document.getElementById('signup-firstname').value;
     const lastname = document.getElementById('signup-lastname').value;
+    const username = document.getElementById('signup-username').value;
     const email = document.getElementById('signup-email').value;
+    const age = document.getElementById('signup-age').value;
     const password = document.getElementById('signup-password').value;
     const confirm = document.getElementById('signup-confirm').value;
     const terms = signupForm.querySelector('input[name="terms"]').checked;
-    
+
+    // Travel Preferences
+    const budgetRange = document.getElementById('signup-budget').value;
+    const travelStyle = document.getElementById('signup-style').value;
+    const accommodationStyle = document.getElementById('signup-accommodation').value;
+    const dietaryRestrictions = [document.getElementById('signup-dietary').value];
+    const accessibilityNeeds = [document.getElementById('signup-accessibility').value];
+    const interests = Array.from(document.querySelectorAll('#signup-interests input[type="checkbox"]:checked')).map(cb => cb.value);
+
     // Basic validation
-    if (!firstname || !lastname || !email || !password || !confirm) {
+    if (!firstname || !lastname || !username || !email || !password || !confirm) {
       showMessage('Please fill in all fields', 'error');
       return;
     }
@@ -90,27 +130,57 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Simulate signup process
     showMessage('Creating your account...', 'info');
-    
-    setTimeout(() => {
+
+    // Call backend signup endpoint
+    fetch(`${appConfig.API_BASE}/users/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: firstname,
+        lastName: lastname,
+        username: username,
+        email: email,
+        password: password,
+        age: age ? Number(age) : undefined,
+        travelPreferences: {
+          budgetRange,
+          travelStyle,
+          interests,
+          accommodationStyle,
+          dietaryRestrictions,
+          accessibilityNeeds
+        }
+      })
+    })
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(err => {
+          throw new Error(err.error || 'Signup failed');
+        });
+      }
+      return res.json();
+    })
+    .then(data => {
       showMessage('Account created successfully! Welcome to Travel Buddy!', 'success');
-      // Redirect to dashboard or home page
+      // Store user data in localStorage
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      // Redirect to dashboard
       setTimeout(() => {
-        window.location.href = 'index.html';
+        window.location.href = './dashboard.html';
       }, 1500);
-    }, 1000);
+    })
+    .catch(err => {
+      console.error('Signup error:', err);
+      showMessage('Signup failed: ' + err.message, 'error');
+    });
   });
 
-  // Social login handlers
+  // Social login handlers (placeholder)
   document.querySelectorAll('.social-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const provider = this.classList.contains('google') ? 'Google' : 'Facebook';
-      showMessage(`Connecting with ${provider}...`, 'info');
-      
-      setTimeout(() => {
-        showMessage(`${provider} authentication would be implemented here`, 'info');
-      }, 1000);
+      showMessage(`${provider} authentication will be implemented soon!`, 'info');
     });
   });
 });
