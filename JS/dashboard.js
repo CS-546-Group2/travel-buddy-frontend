@@ -1,4 +1,6 @@
 // Dashboard functionality
+import appConfig from './appConfig.js';
+
 document.addEventListener('DOMContentLoaded', function() {
   // Check if user is logged in
   const currentUser = localStorage.getItem('currentUser');
