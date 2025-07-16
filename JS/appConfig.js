@@ -6,4 +6,6 @@ const appConfig = {
   get API_BASE() {
     return this.USE_PRODUCTION_API ? this.PROD_API_BASE : this.LOCAL_API_BASE;
   }
-}; 
+};
+
+export default appConfig; 

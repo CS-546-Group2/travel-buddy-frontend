@@ -1,4 +1,6 @@
 // Auth page functionality with backend integration
+import appConfig from './appConfig.js';
+
 document.addEventListener('DOMContentLoaded', function() {
   // Get DOM elements
   const loginToggle = document.getElementById('login-toggle');
@@ -47,35 +49,27 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // Use email as username for now, or map to correct usernames
-    let username = email.split('@')[0];
-    
-    // Map common email patterns to correct usernames
-    if (email === 'alice.smith@example.com') {
-      username = 'asmith';
-    } else if (email === 'bob.johnson@example.com') {
-      username = 'bjohnson';
-    }
-    
     showMessage('Signing you in...', 'info');
     
-    // Call backend login endpoint
+    // Call backend login endpoint - send email directly since backend accepts both username and email
     fetch(`${appConfig.API_BASE}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username: email, password })
     })
     .then(res => {
       if (!res.ok) {
-        throw new Error('Invalid credentials');
+        return res.json().then(err => {
+          throw new Error(err.error || 'Login failed');
+        });
       }
       return res.json();
     })
-    .then(user => {
+    .then(data => {
       showMessage('Welcome back! Redirecting...', 'success');
       
       // Store user data in localStorage for future use
-      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
       
       // Redirect to dashboard
       setTimeout(() => {

@@ -1,4 +1,5 @@
 // Backend integration for Travel Buddy Frontend
+import appConfig from './appConfig.js';
 
 // Optional ping check to verify backend connectivity
 fetch(`${appConfig.API_BASE}/ping`)
