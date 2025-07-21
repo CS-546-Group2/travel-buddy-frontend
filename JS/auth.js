@@ -1,7 +1,10 @@
 // Auth page functionality with backend integration
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+  logger.debug('Auth page initialized');
+
   // Get DOM elements
   const loginToggle = document.getElementById('login-toggle');
   const signupToggle = document.getElementById('signup-toggle');
@@ -11,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Toggle between login and signup
   function switchToLogin() {
+    logger.debug('Switching to login form');
     loginToggle.classList.add('active');
     signupToggle.classList.remove('active');
     toggleSlider.classList.remove('signup');
@@ -22,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function switchToSignup() {
+    logger.debug('Switching to signup form');
     signupToggle.classList.add('active');
     loginToggle.classList.remove('active');
     toggleSlider.classList.add('signup');
@@ -45,13 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Basic validation
     if (!email || !password) {
+      logger.warn('Login attempt failed - missing fields', { email: !!email });
       showMessage('Please fill in all fields', 'error');
       return;
     }
 
+    logger.info('Attempting login', { email });
     showMessage('Signing you in...', 'info');
     
-    // Call backend login endpoint - send email directly since backend accepts both username and email
+    // Call backend login endpoint
     fetch(`${appConfig.API_BASE}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -66,9 +73,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return res.json();
     })
     .then(data => {
+      logger.info('Login successful', { userId: data.user._id });
       showMessage('Welcome back! Redirecting...', 'success');
       
-      // Store user data in localStorage for future use
+      // Store user data in localStorage
       localStorage.setItem('currentUser', JSON.stringify(data.user));
       
       // Redirect to dashboard
@@ -77,7 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 1500);
     })
     .catch(err => {
-      console.error('Login error:', err);
+      logger.error('Login failed', { 
+        email,
+        error: err.message
+      });
       showMessage('Login failed: ' + err.message, 'error');
     });
   });
@@ -103,27 +114,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const accessibilityNeeds = [document.getElementById('signup-accessibility').value];
     const interests = Array.from(document.querySelectorAll('#signup-interests input[type="checkbox"]:checked')).map(cb => cb.value);
 
+    logger.debug('Processing signup form', {
+      username,
+      email,
+      hasPreferences: !!(budgetRange || travelStyle || interests.length)
+    });
+
     // Basic validation
     if (!firstname || !lastname || !username || !email || !password || !confirm) {
+      logger.warn('Signup attempt failed - missing required fields', {
+        hasFirstName: !!firstname,
+        hasLastName: !!lastname,
+        hasUsername: !!username,
+        hasEmail: !!email,
+        hasPassword: !!password,
+        hasConfirm: !!confirm
+      });
       showMessage('Please fill in all fields', 'error');
       return;
     }
     
     if (password !== confirm) {
+      logger.warn('Signup attempt failed - passwords do not match', { username, email });
       showMessage('Passwords do not match', 'error');
       return;
     }
     
     if (password.length < 6) {
+      logger.warn('Signup attempt failed - password too short', { username, email });
       showMessage('Password must be at least 6 characters', 'error');
       return;
     }
     
     if (!terms) {
+      logger.warn('Signup attempt failed - terms not accepted', { username, email });
       showMessage('Please accept the Terms & Conditions', 'error');
       return;
     }
 
+    logger.info('Attempting user registration', { username, email });
     showMessage('Creating your account...', 'info');
 
     // Call backend signup endpoint
@@ -156,16 +185,26 @@ document.addEventListener('DOMContentLoaded', function() {
       return res.json();
     })
     .then(data => {
+      logger.info('User registration successful', { 
+        userId: data.user._id,
+        username: data.user.username
+      });
       showMessage('Account created successfully! Welcome to Travel Buddy!', 'success');
+      
       // Store user data in localStorage
       localStorage.setItem('currentUser', JSON.stringify(data.user));
+      
       // Redirect to dashboard
       setTimeout(() => {
         window.location.href = './dashboard.html';
       }, 1500);
     })
     .catch(err => {
-      console.error('Signup error:', err);
+      logger.error('Registration failed', { 
+        username,
+        email,
+        error: err.message
+      });
       showMessage('Signup failed: ' + err.message, 'error');
     });
   });
@@ -174,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.social-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const provider = this.classList.contains('google') ? 'Google' : 'Facebook';
+      logger.info('Social login attempted', { provider });
       showMessage(`${provider} authentication will be implemented soon!`, 'info');
     });
   });
@@ -188,15 +228,19 @@ function togglePassword(inputId) {
     input.type = 'text';
     toggle.classList.remove('fa-eye');
     toggle.classList.add('fa-eye-slash');
+    logger.debug('Password visibility toggled to visible', { inputId });
   } else {
     input.type = 'password';
     toggle.classList.remove('fa-eye-slash');
     toggle.classList.add('fa-eye');
+    logger.debug('Password visibility toggled to hidden', { inputId });
   }
 }
 
 // Message display function
 function showMessage(message, type = 'info') {
+  logger.debug('Showing message to user', { type, message });
+
   // Remove existing message
   const existingMessage = document.querySelector('.auth-message');
   if (existingMessage) {
