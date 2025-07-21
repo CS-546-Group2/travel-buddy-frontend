@@ -1,35 +1,53 @@
-// js/app.js
+// Backend integration for Travel Buddy Frontend
+import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
-// Ping test (optional)
+logger.debug('Initializing app with config', { 
+  apiBase: appConfig.API_BASE,
+  isProduction: appConfig.USE_PRODUCTION_API
+});
+
+// Optional ping check to verify backend connectivity
 fetch(`${appConfig.API_BASE}/ping`)
   .then(res => res.json())
-  .then(data => console.log('🌐 Backend says:', data.message))
-  .catch(err => console.error('❌ Could not connect to backend:', err));
-
-// Trip fetcher
-document.getElementById('fetchTrip').addEventListener('click', () => {
-  const userId = document.getElementById('userId').value.trim();
-  const tripId = document.getElementById('tripId').value.trim();
-  const resultBox = document.getElementById('result');
-
-  resultBox.textContent = 'Loading...';
-
-  if (!userId || !tripId) {
-    resultBox.textContent = 'Please enter both User ID and Trip ID.';
-    return;
-  }
-
-  const url = `${appConfig.API_BASE}/trips/${userId}/${tripId}`;
-
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error('Trip not found');
-      return res.json();
-    })
-    .then(data => {
-      resultBox.textContent = JSON.stringify(data, null, 2);
-    })
-    .catch(err => {
-      resultBox.textContent = `Error: ${err.message}`;
+  .then(data => {
+    logger.info('Backend connection established', { message: data.message });
+  })
+  .catch(err => {
+    logger.error('Backend connection failed', { 
+      error: err.message,
+      apiBase: appConfig.API_BASE
     });
+  });
+
+// Check if user is logged in and display appropriate UI
+document.addEventListener('DOMContentLoaded', function() {
+  logger.debug('Checking user authentication state');
+  
+  const currentUser = localStorage.getItem('currentUser');
+  
+  if (currentUser) {
+    const user = JSON.parse(currentUser);
+    logger.info('User session found', { 
+      userId: user._id,
+      username: user.username
+    });
+    
+    // Update navigation to show user info and dashboard link
+    const navAuth = document.querySelector('.nav-auth');
+    const navCta = document.querySelector('.nav-cta');
+    
+    if (navAuth && navCta) {
+      navAuth.textContent = `Welcome, ${user.firstName || user.username}`;
+      navAuth.href = './Pages/dashboard.html';
+      navCta.textContent = 'Dashboard';
+      navCta.href = './Pages/dashboard.html';
+      
+      logger.debug('Navigation updated for authenticated user');
+    } else {
+      logger.warn('Navigation elements not found');
+    }
+  } else {
+    logger.debug('No user session found');
+  }
 });
