@@ -1,12 +1,16 @@
 // Main JavaScript functionality for Travel Buddy
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+  logger.debug('Initializing main application');
+
   // Mobile Navigation Toggle
   const navToggle = document.getElementById('nav-toggle');
   const navMenu = document.getElementById('nav-menu');
   const navbar = document.getElementById('navbar');
 
   navToggle.addEventListener('click', function() {
+    logger.debug('Mobile navigation toggled');
     navMenu.classList.toggle('active');
     navToggle.classList.toggle('active');
   });
@@ -14,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Close mobile menu when clicking on a link
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
+      logger.debug('Mobile navigation link clicked, closing menu');
       navMenu.classList.remove('active');
       navToggle.classList.remove('active');
     });
@@ -23,8 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('scroll', function() {
     if (window.scrollY > 50) {
       navbar.classList.add('scrolled');
+      logger.debug('Navbar scrolled state activated');
     } else {
       navbar.classList.remove('scrolled');
+      logger.debug('Navbar scrolled state deactivated');
     }
   });
 
@@ -32,12 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
       if (target) {
+        logger.debug('Smooth scrolling to section', { targetId });
         target.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
+      } else {
+        logger.warn('Scroll target not found', { targetId });
       }
     });
   });
@@ -52,6 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('animate');
+        logger.debug('Feature card animated', { 
+          element: entry.target.className 
+        });
       }
     });
   }, observerOptions);
@@ -61,12 +75,19 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(card);
   });
 
+  logger.info('Feature card animations initialized');
+
   // Testimonial slider functionality
   const testimonialCards = document.querySelectorAll('.testimonial-card');
   const dots = document.querySelectorAll('.dot');
   let currentSlide = 0;
 
   function showSlide(index) {
+    logger.debug('Changing testimonial slide', { 
+      previousSlide: currentSlide,
+      newSlide: index 
+    });
+
     // Remove active class from all cards and dots
     testimonialCards.forEach(card => card.classList.remove('active'));
     dots.forEach(dot => dot.classList.remove('active'));
@@ -79,7 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Add click listeners to dots
   dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => showSlide(index));
+    dot.addEventListener('click', () => {
+      logger.debug('Testimonial dot clicked', { dotIndex: index });
+      showSlide(index);
+    });
   });
 
   // Auto-slide testimonials every 5 seconds
@@ -88,14 +112,19 @@ document.addEventListener('DOMContentLoaded', function() {
     showSlide(nextSlide);
   }, 5000);
 
+  logger.info('Testimonial slider initialized');
+
   // Social media links (placeholder functionality)
   document.querySelectorAll('.social-link').forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       const platform = this.getAttribute('aria-label');
+      logger.info('Social media link clicked', { platform });
       console.log(`Opening ${platform} - functionality would be implemented here`);
     });
   });
+
+  logger.info('Main application initialization complete');
 });
 
 // Utility function for smooth animations
@@ -106,6 +135,10 @@ function animateOnScroll(selector, animationClass = 'animate') {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add(animationClass);
+        logger.debug('Element animated on scroll', { 
+          selector,
+          element: entry.target.className 
+        });
       }
     });
   }, {
@@ -114,11 +147,14 @@ function animateOnScroll(selector, animationClass = 'animate') {
   });
 
   elements.forEach(el => observer.observe(el));
+  logger.debug('Scroll animations initialized', { selector });
 }
 
 // Initialize animations when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  logger.debug('Initializing scroll animations');
   animateOnScroll('.hero-content');
   animateOnScroll('.section-header');
   animateOnScroll('.testimonial-card');
+  logger.info('Scroll animations setup complete');
 });
