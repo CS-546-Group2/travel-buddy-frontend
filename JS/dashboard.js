@@ -78,12 +78,13 @@ function renderTrips(trips) {
         <i class="fas fa-plane"></i>
         <h3>No trips yet</h3>
         <p>Start planning your first adventure!</p>
-        <button class="create-trip-btn" onclick="createNewTrip()">
+        <button class="create-trip-btn" id="create-trip-btn">
           <i class="fas fa-plus"></i>
           <span>Create Your First Trip</span>
         </button>
       </div>
     `;
+
     return;
   }
 
@@ -199,7 +200,8 @@ function logout() {
 
 // Create new trip
 function createNewTrip() {
-  showMessage('Trip creation feature coming soon!', 'info');
+  window.location.href = './createtrip.html';
+  return;
 }
 
 // View trip details
@@ -307,6 +309,15 @@ style.textContent = `
       transform: translateX(100%);
       opacity: 0;
     }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 `;
 document.head.appendChild(style); 
