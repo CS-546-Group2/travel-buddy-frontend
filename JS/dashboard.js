@@ -1,17 +1,22 @@
 // Dashboard functionality
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+  logger.debug('Initializing dashboard');
+
   // Check if user is logged in
   const currentUser = localStorage.getItem('currentUser');
   
   if (!currentUser) {
+    logger.warn('Unauthorized access attempt to dashboard');
     // Redirect to login if not authenticated
     window.location.href = './auth.html';
     return;
   }
 
   const user = JSON.parse(currentUser);
+  logger.info('User loaded dashboard', { userId: user._id });
   
   // Update user name in welcome message
   const userNameElement = document.getElementById('user-name');
@@ -29,11 +34,19 @@ document.addEventListener('DOMContentLoaded', function() {
 // Load user trips and collaborations
 async function loadUserData(userId) {
   try {
+    logger.debug('Loading user data', { userId });
+
     // Load trips and collaborations in parallel
     const [trips, collaborations] = await Promise.all([
       fetch(`${appConfig.API_BASE}/trips/user/${userId}`).then(r => r.json()),
       fetch(`${appConfig.API_BASE}/collaboration/user/${userId}`).then(r => r.json())
     ]);
+
+    logger.info('User data loaded', { 
+      userId,
+      tripCount: trips.length,
+      collaborationCount: collaborations.length
+    });
 
     // Update stats
     updateStats(trips, collaborations);
@@ -45,13 +58,18 @@ async function loadUserData(userId) {
     renderCollaborations(collaborations);
     
   } catch (error) {
-    console.error('Error loading user data:', error);
+    logger.error('Failed to load user data', {
+      userId,
+      error: error.message
+    });
     showError('Failed to load your data. Please try again.');
   }
 }
 
 // Update dashboard statistics
 function updateStats(trips, collaborations) {
+  logger.debug('Updating dashboard statistics');
+
   const tripsCount = document.getElementById('trips-count');
   const collabsCount = document.getElementById('collabs-count');
   const destinationsCount = document.getElementById('destinations-count');
@@ -65,26 +83,37 @@ function updateStats(trips, collaborations) {
     if (trip.destination) destinations.add(trip.destination);
   });
   if (destinationsCount) destinationsCount.textContent = destinations.size || 0;
+
+  logger.info('Dashboard statistics updated', {
+    trips: trips.length,
+    collaborations: collaborations.length,
+    uniqueDestinations: destinations.size
+  });
 }
 
 // Render trips in the trips grid
 function renderTrips(trips) {
+  logger.debug('Rendering trips grid', { tripCount: trips.length });
+
   const tripsGrid = document.getElementById('trips-grid');
-  if (!tripsGrid) return;
+  if (!tripsGrid) {
+    logger.warn('Trips grid element not found');
+    return;
+  }
 
   if (trips.length === 0) {
+    logger.info('No trips to display');
     tripsGrid.innerHTML = `
       <div class="loading-card">
         <i class="fas fa-plane"></i>
         <h3>No trips yet</h3>
         <p>Start planning your first adventure!</p>
-        <button class="create-trip-btn" id="create-trip-btn">
+        <button class="create-trip-btn" onclick="createNewTrip()">
           <i class="fas fa-plus"></i>
           <span>Create Your First Trip</span>
         </button>
       </div>
     `;
-
     return;
   }
 
@@ -112,14 +141,22 @@ function renderTrips(trips) {
       </div>
     </div>
   `).join('');
+
+  logger.info('Trips grid rendered', { tripCount: trips.length });
 }
 
 // Render collaborations in the collaborations grid
 function renderCollaborations(collaborations) {
+  logger.debug('Rendering collaborations grid', { collaborationCount: collaborations.length });
+
   const collabsGrid = document.getElementById('collaborations-grid');
-  if (!collabsGrid) return;
+  if (!collabsGrid) {
+    logger.warn('Collaborations grid element not found');
+    return;
+  }
 
   if (collaborations.length === 0) {
+    logger.info('No collaborations to display');
     collabsGrid.innerHTML = `
       <div class="loading-card">
         <i class="fas fa-users"></i>
@@ -148,10 +185,14 @@ function renderCollaborations(collaborations) {
       </button>
     </div>
   `).join('');
+
+  logger.info('Collaborations grid rendered', { collaborationCount: collaborations.length });
 }
 
 // Setup event listeners
 function setupEventListeners() {
+  logger.debug('Setting up dashboard event listeners');
+
   // Logout button
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
@@ -173,6 +214,7 @@ function setupEventListeners() {
   const shareTripBtn = document.getElementById('share-trip-btn');
   if (shareTripBtn) {
     shareTripBtn.addEventListener('click', () => {
+      logger.info('Share trip button clicked');
       showMessage('Share trip functionality coming soon!', 'info');
     });
   }
@@ -180,6 +222,7 @@ function setupEventListeners() {
   const findInspirationBtn = document.getElementById('find-inspiration-btn');
   if (findInspirationBtn) {
     findInspirationBtn.addEventListener('click', () => {
+      logger.info('Find inspiration button clicked');
       showMessage('Inspiration feature coming soon!', 'info');
     });
   }
@@ -187,35 +230,42 @@ function setupEventListeners() {
   const viewStatsBtn = document.getElementById('view-stats-btn');
   if (viewStatsBtn) {
     viewStatsBtn.addEventListener('click', () => {
+      logger.info('View stats button clicked');
       showMessage('Travel statistics coming soon!', 'info');
     });
   }
+
+  logger.info('Dashboard event listeners setup complete');
 }
 
 // Logout function
 function logout() {
+  logger.info('User logging out');
   localStorage.removeItem('currentUser');
   window.location.href = '../index.html';
 }
 
 // Create new trip
 function createNewTrip() {
+  logger.info('Create new trip requested');
   window.location.href = './createtrip.html';
-  return;
 }
 
 // View trip details
 function viewTrip(tripId) {
+  logger.info('View trip requested', { tripId });
   showMessage(`Viewing trip ${tripId} - details coming soon!`, 'info');
 }
 
 // Edit trip
 function editTrip(tripId) {
+  logger.info('Edit trip requested', { tripId });
   showMessage(`Editing trip ${tripId} - editor coming soon!`, 'info');
 }
 
 // View collaboration
 function viewCollaboration(collabId) {
+  logger.info('View collaboration requested', { collabId });
   showMessage(`Viewing collaboration ${collabId} - details coming soon!`, 'info');
 }
 
@@ -231,6 +281,8 @@ function formatDate(dateString) {
 }
 
 function showMessage(message, type = 'info') {
+  logger.debug('Showing dashboard message', { type, message });
+
   // Create message element
   const messageEl = document.createElement('div');
   messageEl.className = `dashboard-message ${type}`;
@@ -310,14 +362,6 @@ style.textContent = `
       opacity: 0;
     }
   }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
 `;
+
 document.head.appendChild(style); 
