@@ -29,6 +29,13 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
       document.getElementById('last-updated').textContent = formatDate(trip.updatedAt);
       document.getElementById('created-on').textContent = formatDate(trip.createdAt);
       
+      document.getElementById('return').addEventListener('click', function() {
+        window.location.href = './dashboard.html#trips'
+      })
+
+      document.getElementById('edit').addEventListener('click', function() {
+        window.location.href = './edittrip.html?tripId=' + tripId
+      })
     })
     .catch(err => {
       showMessage('Could not load trip: ' + err.message, 'error');

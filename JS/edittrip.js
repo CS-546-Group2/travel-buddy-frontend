@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
     showMessage('Missing trip ID in URL', 'error');
     return;
   }
-
   // Fetch trip from backend
 fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
     .then(res => {
@@ -21,26 +20,94 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
     })
     .then(trip => {
       document.getElementById('trip-title').textContent = "Editing " + trip.tripName;
-      document.getElementById('trip-name').textContent = trip.tripName;
-      document.getElementById('trip-destination').textContent = trip.destination;
-      document.getElementById('trip-start-date').textContent = formatDate(trip.startDate);
-      document.getElementById('trip-end-date').textContent = formatDate(trip.endDate);
-      document.getElementById('trip-budget').textContent = trip.budget;
-      document.getElementById('trip-status').textContent = trip.status;
-      document.getElementById('last-updated').textContent = formatDate(trip.updatedAt);
-      document.getElementById('created-on').textContent = formatDate(trip.createdAt);
-      
-    })
+      document.getElementById('trip-name').value = trip.tripName;
+      document.getElementById('trip-destination').value = trip.destination;
+      document.getElementById('trip-start-date').value = formatDate(trip.startDate);
+      document.getElementById('trip-end-date').value = formatDate(trip.endDate);
+      document.getElementById('trip-budget').value = trip.budget;
+      document.getElementById('trip-status').value = trip.status;
+
+      const form = document.getElementById('trip-form');
+
+      //Update trip with new fields
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const start = new Date(document.getElementById('trip-start-date').value);
+        const end = new Date(document.getElementById('trip-end-date').value);
+
+        if (start >= end) {
+          showMessage('End date must be after start date', 'error');
+          return;
+        }
+
+        if (start < new Date()) {
+          showMessage('Start date cannot be in the past', 'error');
+          return;
+        }    
+        const updatedTrip = {
+          tripName: document.getElementById('trip-name').value,
+          destination: document.getElementById('trip-destination').value,
+          startDate: new Date(document.getElementById('trip-start-date').value),
+          endDate: new Date(document.getElementById('trip-end-date').value),
+          budget: document.getElementById('trip-budget').value,
+          status: document.getElementById('trip-status').value,
+        };
+
+        fetch(`${appConfig.API_BASE}/trips/${tripId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedTrip)
+        })
+          .then(res => {
+            if (!res.ok) {
+              return res.json().then(err => {
+                throw new Error(err.error || 'Failed to update trip');
+              });
+            }
+            return res.json();
+          })
+          .then(data => {
+            showMessage('Trip updated successfully!', 'success');
+            setTimeout(() => {
+            window.location.href = './viewtrip.html?tripId=' + tripId;
+            }, 1500);
+        })
+          .catch(err => {
+            showMessage('Update failed: ' + err.message, 'error');
+          });
+      });
+
+      //Delete trip
+      document.getElementById('delete-trip').addEventListener('click', function() {
+
+        if(!confirm("Are you sure you want to delete this trip permanently?"))
+          return;
+
+        fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'DELETE'})
+          .then(res => {
+            if (!res.ok) {
+              return res.json().then(err => {
+                throw new Error(err.error || 'Failed to delete trip');
+              });
+            }
+            return res.json();
+          })
+              .then(data => {
+                showMessage('Trip deleted successfully!', 'success');
+                setTimeout(() => {
+                  window.location.href = './dashboard.html#trips';
+                }, 1500);
+              })
+              .catch(err => {
+                showMessage('Delete failed: ' + err.message, 'error');
+              });
+          });
+        })
     .catch(err => {
       showMessage('Could not load trip: ' + err.message, 'error');
     });
 });
-
-tripForm.addEventListener('submit', function(e))
-{
-  e.preventDefault();
-}
-
 
 // Message display function
 function showMessage(message, type = 'info') {
@@ -102,13 +169,11 @@ function showMessage(message, type = 'info') {
 }
 
 function formatDate(dateString) {
-  if (!dateString) return 'N/A';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric',
-    year: 'numeric'
-  });
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 // Add CSS animations for messages
