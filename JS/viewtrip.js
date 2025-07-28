@@ -1,4 +1,5 @@
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   const params = new URLSearchParams(window.location.search);
@@ -19,12 +20,17 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
       return res.json();
     })
     .then(trip => {
+      console.log(trip)
       document.getElementById('trip-title').textContent = trip.tripName + " | Travel Buddy";
       document.getElementById('trip-name').textContent = trip.tripName;
       document.getElementById('trip-destination').textContent = trip.destination;
       document.getElementById('trip-start-date').textContent = formatDate(trip.startDate);
       document.getElementById('trip-end-date').textContent = formatDate(trip.endDate);
       document.getElementById('trip-budget').textContent = trip.budget;
+      document.getElementById('trip-budget-range').textContent = trip.preferences.budgetRange;
+      document.getElementById('trip-travel-style').textContent = trip.preferences.travelStyle;
+      document.getElementById('trip-accommodation-style').textContent = trip.preferences.accommodationStyle;
+      document.getElementById('trip-interests').textContent = trip.preferences.interests;
       document.getElementById('trip-status').textContent = trip.status;
       document.getElementById('last-updated').textContent = formatDate(trip.updatedAt);
       document.getElementById('created-on').textContent = formatDate(trip.createdAt);

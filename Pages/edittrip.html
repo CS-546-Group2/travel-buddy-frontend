@@ -101,7 +101,73 @@
               </div>
             </div>
             </div>
-            
+            <div class="form-row">
+            <div class="form-group">
+                  <label for="trip-travel-style">Travel Style </label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-suitcase-rolling input-icon"></i>
+                    <select id="trip-travel-style" class="statusInput" name="travel-style" required>
+                      <option value="balanced">Balanced</option>
+                      <option value="relaxed">Relaxed</option>
+                      <option value="fast-paced">Fast-paced</option>
+                      <option value="adventure">Adventure</option>
+                    </select>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="trip-accommodation-style">Accommodation Style </label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-home input-icon"></i>
+                    <select id="trip-accommodation-style" class="statusInput" name="accommodation-style" required>
+                      <option value="hotels">Hotels</option>
+                      <option value="hostels">Hostels</option>
+                      <option value="vacation-rentals">Vacation Rentals</option>
+                      <option value="eco-lodges">Eco-lodges</option>
+                      <option value="camping">Camping</option>
+                      <option value="luxury-resorts">Luxury Resorts</option>
+                    </select>
+                  </div>
+              </div>
+            </div>
+
+          <div class="form-group">
+            <label for="trip-budget-range">Budget Range </label>
+            <div class="input-wrapper">
+              <i class="fas fa-dollar-sign input-icon"></i>
+              <select id="trip-budget-range" class="statusInput" name="budget-range" required>
+                <option value="mid-range">Mid-range</option>
+                <option value="budget">Budget</option>
+                <option value="luxury">Luxury</option>
+              </select>
+            </div>
+          </div> 
+          <div class="form-group">
+            <label>Interests (select all that apply)</label>
+            <div class="checkbox-group" id="trip-interests">
+              <label><input type="checkbox" value="food"> Food</label>
+              <label><input type="checkbox" value="culture"> Culture</label>
+              <label><input type="checkbox" value="adventure"> Adventure</label>
+              <label><input type="checkbox" value="nature"> Nature</label>
+              <label><input type="checkbox" value="nightlife"> Nightlife</label>
+              <label><input type="checkbox" value="history"> History</label>
+              <label><input type="checkbox" value="wellness"> Wellness</label>
+              <label><input type="checkbox" value="photography"> Photography</label>
+              <label><input type="checkbox" value="shopping"> Shopping</label>
+              <label><input type="checkbox" value="sports"> Sports</label>
+              <label><input type="checkbox" value="art"> Art</label>
+              <label><input type="checkbox" value="music"> Music</label>
+              <label><input type="checkbox" value="architecture"> Architecture</label>
+              <label><input type="checkbox" value="beaches"> Beaches</label>
+              <label><input type="checkbox" value="mountains"> Mountains</label>
+              <label><input type="checkbox" value="cities"> Cities</label>
+              <label><input type="checkbox" value="rural"> Rural</label>
+              <label><input type="checkbox" value="temples"> Temples</label>
+              <label><input type="checkbox" value="museums"> Museums</label>
+              <label><input type="checkbox" value="local-experiences"> Local Experiences</label>
+            </div>
+          </div>
+
+
             <button type="submit" class="auth-btn">
               <span>Save Changes</span>
               <i class="fas fa-arrow-right"></i>

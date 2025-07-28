@@ -1,4 +1,5 @@
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   const params = new URLSearchParams(window.location.search);
@@ -22,12 +23,24 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
       document.getElementById('trip-title').textContent = "Editing " + trip.tripName;
       document.getElementById('trip-name').value = trip.tripName;
       document.getElementById('trip-destination').value = trip.destination;
-      document.getElementById('trip-start-date').value = formatDate(trip.startDate);
-      document.getElementById('trip-end-date').value = formatDate(trip.endDate);
+      document.getElementById('trip-start-date').value = trip.startDate.split("T")[0];
+      document.getElementById('trip-end-date').value = trip.endDate.split("T")[0];
       document.getElementById('trip-budget').value = trip.budget;
+      document.getElementById('trip-budget-range').value = trip.preferences.budgetRange;
+      document.getElementById('trip-travel-style').value = trip.preferences.travelStyle;
+      document.getElementById('trip-accommodation-style').value = trip.preferences.accommodationStyle;
+      const interests = document.querySelectorAll('#trip-interests input[type="checkbox"]');
+      interests.forEach(checkbox => 
+        {
+          if (trip.preferences.interests.includes(checkbox.value)) 
+          {
+            
+            checkbox.checked = true;
+          }
+        })
       document.getElementById('trip-status').value = trip.status;
       document.getElementById('return').addEventListener('click', function() {
-        window.location.href = './dashboard.html#trips'
+        window.location.href = `./viewtrip.html?tripId=${tripId}`
       })
       const form = document.getElementById('trip-form');
 
@@ -43,13 +56,33 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
           return;
         }
 
-        const updatedTrip = {
-          tripName: document.getElementById('trip-name').value,
-          destination: document.getElementById('trip-destination').value,
-          startDate: new Date(document.getElementById('trip-start-date').value),
-          endDate: new Date(document.getElementById('trip-end-date').value),
-          budget: document.getElementById('trip-budget').value,
-          status: document.getElementById('trip-status').value,
+
+        const tripName =  document.getElementById('trip-name').value
+        const destination =  document.getElementById('trip-destination').value
+        const startDate = new Date(document.getElementById('trip-start-date').value)
+        const endDate = new Date(document.getElementById('trip-end-date').value)
+        const budget = document.getElementById('trip-budget').value
+        const status = document.getElementById('trip-status').value
+        const duration =  Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+        const budgetRange = document.getElementById('trip-budget-range').value
+        const travelStyle =  document.getElementById('trip-travel-style').value
+        const accommodationStyle = document.getElementById('trip-accommodation-style').value
+        const interests =  Array.from(document.querySelectorAll('#trip-interests input[type="checkbox"]:checked')).map(cb => cb.value);
+        const updatedTrip = 
+        {
+            tripName: tripName,
+            destination: destination,
+            startDate: startDate,
+            endDate: endDate,
+            duration: duration,
+            budget: budget,
+            status: status,
+            preferences: {
+              travelStyle,
+              interests,
+              budgetRange,
+              accommodationStyle
+            }
         };
 
         fetch(`${appConfig.API_BASE}/trips/${tripId}`, {
@@ -164,17 +197,6 @@ function showMessage(message, type = 'info') {
       }, 300);
     }
   }, 4000);
-}
-
-function formatDate(dateString) {
-  if (!dateString) return 'N/A';
-  const date = new Date;
-  return date.toLocaleDateString('en-US', { 
-    timeZone: 'UTC', 
-    month: 'short', 
-    day: 'numeric',
-    year: 'numeric'
-  });
 }
 
 // Add CSS animations for messages
