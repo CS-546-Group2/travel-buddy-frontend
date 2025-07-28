@@ -9,6 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
     showMessage('Missing trip ID in URL', 'error');
     return;
   }
+
+  const currentUser = localStorage.getItem('currentUser');
+  
+    if (!currentUser) {
+        // Redirect to login if not authenticated
+        window.location.href = './auth.html';
+        return;
+    }
+
   // Fetch trip from backend
 fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
     .then(res => {
