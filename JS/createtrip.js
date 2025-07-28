@@ -13,6 +13,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const user = JSON.parse(currentUser);
 
+    if (user.travelPreferences.travelStyle) {
+      const travelStyleSelect = document.getElementById('create-travel-style');
+      travelStyleSelect.value = user.travelPreferences.travelStyle;
+    }
+
+    if (user.travelPreferences.accommodationStyle) {
+      const travelAccommodationSelect = document.getElementById('create-accommodation-style');
+      travelAccommodationSelect.value = user.travelPreferences.accommodationStyle;
+    }
+
+    if (user.travelPreferences.budgetRange) {
+      const travelBudgetSelect = document.getElementById('create-budget-range');
+      travelBudgetSelect.value = user.travelPreferences.budgetRange;
+    }
+
+    user.travelPreferences.interests.forEach(interest => {
+      console.log(interest);
+      const checkbox = document.querySelector(`#create-interests input[type="checkbox"][value="${interest}"]`);
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+
     // Get DOM elements
     const tripForm = document.getElementById('trip-form');
 
@@ -20,16 +43,31 @@ document.addEventListener('DOMContentLoaded', function() {
     tripForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
+        // Get Trip Details
         const tripname = document.getElementById('create-tripname').value;
         const destination = document.getElementById('create-destination').value;
         const startdate = document.getElementById('create-start-date').value;
         const enddate = document.getElementById('create-end-date').value;
-        const budget = document.getElementById('create-budget').value;
         const status = document.getElementById('create-status').value;
 
+        // Travel Preferences
+        const budget = document.getElementById('create-budget').value;
+        const budgetRange = document.getElementById('create-budget-range').value;
+        const travelStyle = document.getElementById('create-travel-style').value;
+        const accommodationStyle = document.getElementById('create-accommodation-style').value;
+        const interests = Array.from(document.querySelectorAll('#create-interests input[type="checkbox"]:checked')).map(cb => cb.value);
+        
         // Basic validation
         if (!tripname || !destination || !startdate || !enddate || !budget || !status) {
-        showMessage('Please fill in all fields', 'error');
+          logger.warn("Trip creation failed - invalid dates", {
+            tripname,
+            destination,
+            startdate,
+            enddate,
+            budget,
+            status
+          });
+        
         return;
         }
         
@@ -37,14 +75,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const end = new Date(enddate);
 
         if (start >= end) {
-        showMessage('End date must be after start date', 'error');
+          logger.warn("Trip creation failed - invalid dates", {
+            startdate,
+            enddate,
+          });
         }
 
         if (start < new Date()) {
-        showMessage('Start date cannot be in the past', 'error');
+          logger.warn("Trip creation failed - past start date", {
+            startdate,
+          });
         }    
 
-        showMessage('Creating your trip...', 'info');
+        logger.info('Creating new trip...', { 
+            tripname,
+            destination,
+            startdate,
+            enddate,
+            budget,
+            status,
+            preferences
+        });
 
         // Call backend signup endpoint
         fetch(`${appConfig.API_BASE}/trips/`, {
@@ -59,7 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
             duration: Math.ceil((end - start) / (1000 * 60 * 60 * 24)),
             budget: budget,
             status: status,
-            preferences: user.travelPreferences 
+            preferences: {
+              travelStyle,
+              interests,
+              budgetRange,
+              accommodationStyle
+            }
         })
         })
         .then(res => {
@@ -71,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return res.json();
         })
         .then(data => {
-        showMessage('Trip created successfully! View your trip on the dashboard!', 'success');
+        logger.info('Trip created successfully! View your trip on the dashboard!');
         // Redirect to dashboard
         setTimeout(() => {
             window.location.href = './dashboard.html#trips';
@@ -79,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
         console.error('Trip creation error:', err);
-        showMessage('Trip creation failed: ' + err.message, 'error');
+        logger.error('Trip creation error:', err);
         });
     });
 });
