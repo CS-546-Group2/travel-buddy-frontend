@@ -41,10 +41,6 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
           return;
         }
 
-        if (start < new Date()) {
-          showMessage('Start date cannot be in the past', 'error');
-          return;
-        }    
         const updatedTrip = {
           tripName: document.getElementById('trip-name').value,
           destination: document.getElementById('trip-destination').value,
@@ -169,11 +165,14 @@ function showMessage(message, type = 'info') {
 }
 
 function formatDate(dateString) {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  if (!dateString) return 'N/A';
+  const date = new Date;
+  return date.toLocaleDateString('en-US', { 
+    timeZone: 'UTC', 
+    month: 'short', 
+    day: 'numeric',
+    year: 'numeric'
+  });
 }
 
 // Add CSS animations for messages
