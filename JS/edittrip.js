@@ -26,7 +26,9 @@ fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
       document.getElementById('trip-end-date').value = formatDate(trip.endDate);
       document.getElementById('trip-budget').value = trip.budget;
       document.getElementById('trip-status').value = trip.status;
-
+      document.getElementById('return').addEventListener('click', function() {
+        window.location.href = './dashboard.html#trips'
+      })
       const form = document.getElementById('trip-form');
 
       //Update trip with new fields
