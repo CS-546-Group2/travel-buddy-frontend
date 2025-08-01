@@ -248,7 +248,9 @@ function logout() {
 // Create new trip
 function createNewTrip() {
   logger.info('Create new trip requested');
+  window.location.href = './createtrip.html';
 }
+
 
 // View trip details
 function viewTrip(tripId) {
