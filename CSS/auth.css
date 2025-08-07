@@ -352,6 +352,31 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 8px 25px var(--shadow-hover);
 }
 
+.delete-btn {
+  width: 100%;
+  background: red;
+  color: var(--white);
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--shadow-hover);
+}
+
+
 /* Social Login */
 .social-divider {
   text-align: center;

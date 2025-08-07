@@ -1,5 +1,6 @@
 // Auth page functionality with backend integration
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -94,7 +95,12 @@ document.addEventListener('DOMContentLoaded', function() {
             enddate,
             budget,
             status,
-            preferences
+            preferences: {
+              travelStyle,
+              interests,
+              budgetRange,
+              accommodationStyle
+            }
         });
 
         // Call backend signup endpoint
@@ -128,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
         logger.info('Trip created successfully! View your trip on the dashboard!');
+        //Keeping this for client's view
+        showMessage('Trip created successfully! View your trip on the dashboard!', 'success');
         // Redirect to dashboard
         setTimeout(() => {
             window.location.href = './dashboard.html#trips';
@@ -136,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(err => {
         console.error('Trip creation error:', err);
         logger.error('Trip creation error:', err);
+        showMessage('Trip creation failed: ' + err.message, 'error');
         });
     });
 });
