@@ -1,0 +1,49 @@
+.trip-create-card {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px var(--shadow);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+.input-wrapper-alt {
+  position: relative;
+}
+
+.input-wrapper-alt input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 1.75rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: var(--white);
+}
+
+.input-wrapper-alt input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(54, 83, 89, 0.1);
+}
+
+.statusInput {
+  width: 100%;
+  padding:1rem 0.875rem 0.75rem 2.5rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: var(--white);
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+  
+}
+
+.statusInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(54, 83, 89, 0.1);
+}
+

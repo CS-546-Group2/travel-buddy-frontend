@@ -248,7 +248,7 @@ function logout() {
 // Create new trip
 function createNewTrip() {
   logger.info('Create new trip requested');
-  showMessage('Trip creation feature coming soon!', 'info');
+  window.location.href = './createtrip.html';
 }
 
 // View trip details
