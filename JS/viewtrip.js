@@ -1,7 +1,7 @@
 import appConfig from './appConfig.js';
 import logger from './utils/logger.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   const params = new URLSearchParams(window.location.search);
   const tripId = params.get('tripId');
   if (!tripId) {
@@ -18,43 +18,45 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-  // Fetch trip from backend
-fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
-    .then(res => {
-      if (!res.ok) {
-        return res.json().then(err => {
-          throw new Error(err.error || 'Trip not found');
-        });
-      }
-      return res.json();
-    })
-    .then(trip => {
-      console.log(trip)
-      document.getElementById('trip-title').textContent = trip.tripName + " | Travel Buddy";
-      document.getElementById('trip-name').textContent = trip.tripName;
-      document.getElementById('trip-destination').textContent = trip.destination;
-      document.getElementById('trip-start-date').textContent = formatDate(trip.startDate);
-      document.getElementById('trip-end-date').textContent = formatDate(trip.endDate);
-      document.getElementById('trip-budget').textContent = trip.budget;
-      document.getElementById('trip-budget-range').textContent = trip.preferences.budgetRange;
-      document.getElementById('trip-travel-style').textContent = trip.preferences.travelStyle;
-      document.getElementById('trip-accommodation-style').textContent = trip.preferences.accommodationStyle;
-      document.getElementById('trip-interests').textContent = trip.preferences.interests;
-      document.getElementById('trip-status').textContent = trip.status;
-      document.getElementById('last-updated').textContent = formatDate(trip.updatedAt);
-      document.getElementById('created-on').textContent = formatDate(trip.createdAt);
-      
-      document.getElementById('return').addEventListener('click', function() {
-        window.location.href = './dashboard.html#trips'
-      })
+  try {
+    // Fetch trip from backend
+    const response = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, { method: 'GET' });
 
-      document.getElementById('edit').addEventListener('click', function() {
-        window.location.href = './edittrip.html?tripId=' + tripId
-      })
-    })
-    .catch(err => {
-      showMessage('Could not load trip: ' + err.message, 'error');
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || 'Trip not found');
+    }
+
+    const trip = await response.json();
+    //console.log(trip);
+    logger.info('Viewing trip:', trip)
+
+    document.getElementById('trip-title').textContent = `${trip.tripName} | Travel Buddy`;
+    document.getElementById('trip-name').textContent = trip.tripName;
+    document.getElementById('trip-destination').textContent = trip.destination;
+    document.getElementById('trip-start-date').textContent = formatDate(trip.startDate);
+    document.getElementById('trip-end-date').textContent = formatDate(trip.endDate);
+    document.getElementById('trip-budget').textContent = trip.budget;
+    document.getElementById('trip-budget-range').textContent = trip.preferences.budgetRange;
+    document.getElementById('trip-travel-style').textContent = trip.preferences.travelStyle;
+    document.getElementById('trip-accommodation-style').textContent = trip.preferences.accommodationStyle;
+    document.getElementById('trip-interests').textContent = trip.preferences.interests;
+    document.getElementById('trip-status').textContent = trip.status;
+    document.getElementById('last-updated').textContent = formatDate(trip.updatedAt);
+    document.getElementById('created-on').textContent = formatDate(trip.createdAt);
+
+    document.getElementById('return').addEventListener('click', function () {
+      window.location.href = './dashboard.html#trips';
     });
+
+    document.getElementById('edit').addEventListener('click', function () {
+      window.location.href = `./edittrip.html?tripId=${tripId}`;
+    });
+
+  } catch (err) {
+    showMessage('Could not load trip: ' + err.message, 'error');
+    logger.error('Could not load trip: ' + err.message);
+  }
 });
 
 

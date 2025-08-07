@@ -1,7 +1,7 @@
 import appConfig from './appConfig.js';
 import logger from './utils/logger.js';
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   const params = new URLSearchParams(window.location.search);
   const tripId = params.get('tripId');
 
@@ -19,134 +19,139 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
   // Fetch trip from backend
-fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
-    .then(res => {
-      if (!res.ok) {
-        return res.json().then(err => {
-          throw new Error(err.error || 'Trip not found');
-        });
-      }
-      return res.json();
-    })
-    .then(trip => {
-      document.getElementById('trip-title').textContent = "Editing " + trip.tripName;
-      document.getElementById('trip-name').value = trip.tripName;
-      document.getElementById('trip-destination').value = trip.destination;
-      document.getElementById('trip-start-date').value = trip.startDate.split("T")[0];
-      document.getElementById('trip-end-date').value = trip.endDate.split("T")[0];
-      document.getElementById('trip-budget').value = trip.budget;
-      document.getElementById('trip-budget-range').value = trip.preferences.budgetRange;
-      document.getElementById('trip-travel-style').value = trip.preferences.travelStyle;
-      document.getElementById('trip-accommodation-style').value = trip.preferences.accommodationStyle;
-      const interests = document.querySelectorAll('#trip-interests input[type="checkbox"]');
-      interests.forEach(checkbox => 
+  try{
+    const response = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'GET'})
+
+    if(!response.ok)
+    {
+      const err = await response.json();
+      throw new Error(err.error || 'Trip not found');
+    }
+
+    const trip = await response.json();
+    document.getElementById('trip-title').textContent = "Editing " + trip.tripName;
+    document.getElementById('trip-name').value = trip.tripName;
+    document.getElementById('trip-destination').value = trip.destination;
+    document.getElementById('trip-start-date').value = trip.startDate.split("T")[0];
+    document.getElementById('trip-end-date').value = trip.endDate.split("T")[0];
+    document.getElementById('trip-budget').value = trip.budget;
+    document.getElementById('trip-budget-range').value = trip.preferences.budgetRange;
+    document.getElementById('trip-travel-style').value = trip.preferences.travelStyle;
+    document.getElementById('trip-accommodation-style').value = trip.preferences.accommodationStyle;
+    const interests = document.querySelectorAll('#trip-interests input[type="checkbox"]');
+    interests.forEach(checkbox => 
+      {
+        if (trip.preferences.interests.includes(checkbox.value)) 
         {
-          if (trip.preferences.interests.includes(checkbox.value)) 
-          {
-            
-            checkbox.checked = true;
-          }
-        })
-      document.getElementById('trip-status').value = trip.status;
-      document.getElementById('return').addEventListener('click', function() {
-        window.location.href = `./viewtrip.html?tripId=${tripId}`
-      })
-      const form = document.getElementById('trip-form');
-
-      //Update trip with new fields
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const start = new Date(document.getElementById('trip-start-date').value);
-        const end = new Date(document.getElementById('trip-end-date').value);
-
-        if (start >= end) {
-          showMessage('End date must be after start date', 'error');
-          return;
+          
+          checkbox.checked = true;
         }
+      })
+    document.getElementById('trip-status').value = trip.status;
+    document.getElementById('return').addEventListener('click', function() {
+      window.location.href = `./viewtrip.html?tripId=${tripId}`
+    })
+
+    //Update trip with new fields
+    document.getElementById('trip-form').addEventListener('submit', async function (e) 
+    {
+      e.preventDefault();
+
+      const start = new Date(document.getElementById('trip-start-date').value);
+      const end = new Date(document.getElementById('trip-end-date').value);
+
+      if (start >= end) {
+        showMessage('End date must be after start date', 'error');
+        return;
+      }
 
 
-        const tripName =  document.getElementById('trip-name').value
-        const destination =  document.getElementById('trip-destination').value
-        const startDate = new Date(document.getElementById('trip-start-date').value)
-        const endDate = new Date(document.getElementById('trip-end-date').value)
-        const budget = document.getElementById('trip-budget').value
-        const status = document.getElementById('trip-status').value
-        const duration =  Math.ceil((end - start) / (1000 * 60 * 60 * 24))
-        const budgetRange = document.getElementById('trip-budget-range').value
-        const travelStyle =  document.getElementById('trip-travel-style').value
-        const accommodationStyle = document.getElementById('trip-accommodation-style').value
-        const interests =  Array.from(document.querySelectorAll('#trip-interests input[type="checkbox"]:checked')).map(cb => cb.value);
-        const updatedTrip = 
-        {
-            tripName: tripName,
-            destination: destination,
-            startDate: startDate,
-            endDate: endDate,
-            duration: duration,
-            budget: budget,
-            status: status,
-            preferences: {
-              travelStyle,
-              interests,
-              budgetRange,
-              accommodationStyle
-            }
-        };
-
-        fetch(`${appConfig.API_BASE}/trips/${tripId}`, {
+      const tripName =  document.getElementById('trip-name').value
+      const destination =  document.getElementById('trip-destination').value
+      const startDate = new Date(document.getElementById('trip-start-date').value)
+      const endDate = new Date(document.getElementById('trip-end-date').value)
+      const budget = document.getElementById('trip-budget').value
+      const status = document.getElementById('trip-status').value
+      const duration =  Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+      const budgetRange = document.getElementById('trip-budget-range').value
+      const travelStyle =  document.getElementById('trip-travel-style').value
+      const accommodationStyle = document.getElementById('trip-accommodation-style').value
+      const interests =  Array.from(document.querySelectorAll('#trip-interests input[type="checkbox"]:checked')).map(cb => cb.value);
+      const updatedTrip = 
+      {
+          tripName: tripName,
+          destination: destination,
+          startDate: startDate,
+          endDate: endDate,
+          duration: duration,
+          budget: budget,
+          status: status,
+          preferences: {
+            travelStyle: travelStyle,
+            interests: interests,
+            budgetRange: budgetRange,
+            accommodationStyle: accommodationStyle
+          }
+      };
+      //console.log(updatedTrip)
+      try{
+        const updateRes = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedTrip)
-        })
-          .then(res => {
-            if (!res.ok) {
-              return res.json().then(err => {
-                throw new Error(err.error || 'Failed to update trip');
-              });
-            }
-            return res.json();
-          })
-          .then(data => {
-            showMessage('Trip updated successfully!', 'success');
-            setTimeout(() => {
-            window.location.href = './viewtrip.html?tripId=' + tripId;
-            }, 1500);
-        })
-          .catch(err => {
-            showMessage('Update failed: ' + err.message, 'error');
-          });
-      });
+        });
+        if(!updateRes.ok)
+        {
+          const err = await updateRes.json();
+          throw new Error(err.error || 'Failed to update trip')
+        }
+        const updatedTripResponse = await updateRes.json();
+        showMessage('Trip updated successfully!', 'success');
+        logger.info('Trip updated successfully!')
+        setTimeout(() => {
+          window.location.href = './viewtrip.html?tripId=' + tripId;
+        }, 1500);
+      }
+      catch(err)
+      {
+        showMessage('Update failed: ' + err.message, 'error');
+        logger.error('Update failed: ' + err.message)
+      }
+    }
+  );
 
-      //Delete trip
-      document.getElementById('delete-trip').addEventListener('click', function() {
+    //Delete trip
+    document.getElementById('delete-trip').addEventListener('click', async function() {
 
-        if(!confirm("Are you sure you want to delete this trip permanently?"))
-          return;
+      if(!confirm("Are you sure you want to delete this trip permanently?"))
+        return;
+      try{
+        const deleteRes = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'DELETE'});
+        if(!deleteRes.ok)
+        {
+          const err = await deleteRes.json();
+          throw new Error(err.error || 'Failed to delete trip')
+        }
 
-        fetch(`${appConfig.API_BASE}/trips/${tripId}`, {method: 'DELETE'})
-          .then(res => {
-            if (!res.ok) {
-              return res.json().then(err => {
-                throw new Error(err.error || 'Failed to delete trip');
-              });
-            }
-            return res.json();
-          })
-              .then(data => {
-                showMessage('Trip deleted successfully!', 'success');
-                setTimeout(() => {
-                  window.location.href = './dashboard.html#trips';
-                }, 1500);
-              })
-              .catch(err => {
-                showMessage('Delete failed: ' + err.message, 'error');
-              });
-          });
-        })
-    .catch(err => {
-      showMessage('Could not load trip: ' + err.message, 'error');
+        const deletedTripResponse = await deleteRes.json();
+        showMessage('Trip deleted successfully!', 'success');
+        logger.info('Trip deleted successfully!')
+        setTimeout(() => {
+          window.location.href = './dashboard.html#trips';
+        }, 1500);
+      }
+      catch(err)
+      {
+        showMessage('Delete failed: ' + err.message, 'error');
+        logger.error('Delete failed: ' + err.message)
+      }
     });
+
+  } catch(err)
+  {
+    showMessage('Could not load trip: ' + err.message, 'error');
+    logger.error('Could not load trip: ' + err.message)
+  }
 });
 
 // Message display function
