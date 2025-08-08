@@ -1,4 +1,5 @@
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -71,16 +72,19 @@ document.getElementById('preferencesForm').addEventListener('submit', async (e) 
     if (response.ok) {
       document.getElementById('successMsg').style.display = 'block';
       //Refresh localstorage so new preferences apply to the create a trip page
-      console.log('✅ Preferences saved:', JSON.stringify(result))
+      //console.log('✅ Preferences saved:', JSON.stringify(result))
+      logger.info('✅ Preferences saved:', JSON.stringify(result))
       localStorage.setItem('currentUser', JSON.stringify(result));
     } else {
-      console.error('❌ Server error:', result.error);
+      //console.error('❌ Server error:', result.error);
+      logger.error('❌ Server error:', result.error);
       alert(result.error || 'Failed to save preferences.');
     }
   }
   catch(error)
   {
-    console.error('❌ Network error:', error);
+    //console.error('❌ Network error:', error);
+    logger.error('❌ Network error:', error);
     alert('Network error. Please try again.');
   }
 })
