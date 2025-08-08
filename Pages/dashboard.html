@@ -16,6 +16,8 @@
     
     <link rel="stylesheet" href="../CSS/index.css">
     <link rel="stylesheet" href="../CSS/dashboard.css">
+    <link rel="stylesheet" href="../CSS/trip.css">
+    <link rel="stylesheet" href="../CSS/auth.css">
   </head>
 
   <body>
@@ -96,6 +98,20 @@
         <div class="section-header">
           <h2 class="section-title">My Trips</h2>
           <p class="section-subtitle">Manage your travel plans and itineraries</p>
+          <div class="form-group-alt">
+              <form class="search-form" id="search-form"> 
+                  <div class="input-wrapper input-wrapper-small">
+                    <i class="fas fa-search input-icon"></i>
+                    <input type="text" id="trip-search" name="tripsearch" placeholder="Search for a trip by name, destination, etc.">
+                  </div>
+                  <div>
+                    <button class="trip-btn primary search-btn" id="search-trip-btn">
+                      Search
+                    </button>
+                  </div>
+              </form>
+              
+          </div>
         </div>
         
         <div class="trips-grid" id="trips-grid">
