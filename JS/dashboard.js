@@ -263,21 +263,52 @@ function setupEventListeners() {
       e.preventDefault();
       
       const query = document.getElementById('trip-search').value;
+      const startRange = document.getElementById('trip-start-date').value;
+      const endRange = document.getElementById('trip-end-date').value;
 
-      if (!query) {       
-        loadUserData(user._id);
-      } else {
-        try { 
-          const tripResponse = await fetch(`${appConfig.API_BASE}/trips/search/${encodeURIComponent(query)}?userId=${encodeURIComponent(user._id)}`)
+      const start = new Date(startRange);
+      const end = new Date(endRange);
 
-          if (!tripResponse.ok) throw 'Failed to fetch';
-
-          const trips = await tripResponse.json();
-          renderTrips(trips, true);
-        } catch (e) {
-          logger.error('Trip search failed', { error: e });
-          showError(e);
+      if (end) {
+        if (start >= end) {
+          logger.error("Trip query failed - invalid date range", {
+            startRange,
+            endRange,
+          });
         }
+      }
+
+      if (startRange) {
+        if (startRange < new Date()) {
+          logger.error("Trip query failed - past start date", {
+            startRange,
+          });
+        }  
+      }
+        
+
+      if (!query && !startRange && !endRange) {       
+          loadUserData(user._id);
+      } else {
+          try { 
+            let parts = [
+              query || '',              
+              startRange || '',          
+              endRange || ''             
+            ];
+            
+            const newQuery = parts.join(';');
+
+            const tripResponse = await fetch(`${appConfig.API_BASE}/trips/search/${encodeURIComponent(newQuery)}?${encodeURIComponent(user._id)}`);
+
+            if (!tripResponse.ok) throw 'Failed to fetch';
+
+            const trips = await tripResponse.json();
+            renderTrips(trips, true);
+          } catch (e) {
+            logger.error('Trip search failed', { error: e });
+            showError(e);
+          }
       }
   });
 
