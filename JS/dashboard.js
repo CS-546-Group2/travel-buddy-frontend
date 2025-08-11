@@ -328,6 +328,7 @@ function createNewTrip() {
   window.location.href = './createtrip.html';
 }
 
+
 // View trip details
 function viewTrip(tripId) {
   logger.info('View trip requested', { tripId });
