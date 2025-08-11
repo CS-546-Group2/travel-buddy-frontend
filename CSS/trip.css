@@ -47,3 +47,30 @@
   box-shadow: 0 0 0 3px rgba(54, 83, 89, 0.1);
 }
 
+.form-group-alt {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;;
+  align-items: center;
+  margin-top: 2.5rem;
+}
+
+.input-wrapper-small {
+  width: 32%;
+  min-width: 370px;
+  margin-bottom: 1rem;
+}
+
+.search-btn {
+  width: 6.5rem;
+  height: 2.5rem;
+  font-weight: bold;;
+  border-radius: 20px;
+}
+
+.empty-query {
+  text-align: center;
+  justify-content: center;
+  display:flex;
+  width: 100%;
+}

@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Setup event listeners
   setupEventListeners();
+
+  
+  
 });
 
 // Load user trips and collaborations
@@ -36,11 +39,12 @@ async function loadUserData(userId) {
   try {
     logger.debug('Loading user data', { userId });
 
-    // Load trips and collaborations in parallel
-    const [trips, collaborations] = await Promise.all([
-      fetch(`${appConfig.API_BASE}/trips/user/${userId}`).then(r => r.json()),
-      fetch(`${appConfig.API_BASE}/collaboration/user/${userId}`).then(r => r.json())
-    ]);
+    
+    const tripResponse = await fetch(`${appConfig.API_BASE}/trips/user/${userId}`);
+    const collabResponse = await fetch(`${appConfig.API_BASE}/collaboration/user/${userId}`);
+
+    const trips = await tripResponse.json();
+    const collaborations = await collabResponse.json();
 
     logger.info('User data loaded', { 
       userId,
@@ -52,7 +56,7 @@ async function loadUserData(userId) {
     updateStats(trips, collaborations);
     
     // Render trips
-    renderTrips(trips);
+    renderTrips(trips, false);
     
     // Render collaborations
     renderCollaborations(collaborations);
@@ -92,7 +96,7 @@ function updateStats(trips, collaborations) {
 }
 
 // Render trips in the trips grid
-function renderTrips(trips) {
+function renderTrips(trips, query) {
   logger.debug('Rendering trips grid', { tripCount: trips.length });
 
   const tripsGrid = document.getElementById('trips-grid');
@@ -101,7 +105,7 @@ function renderTrips(trips) {
     return;
   }
 
-  if (trips.length === 0) {
+  if (trips.length === 0 && !query) {
     logger.info('No trips to display');
     tripsGrid.innerHTML = `
       <div class="loading-card">
@@ -112,6 +116,20 @@ function renderTrips(trips) {
           <i class="fas fa-plus"></i>
           <span>Create Your First Trip</span>
         </button>
+      </div>
+    `;
+    return;
+  }
+
+  if (trips.length === 0 && query) {
+    logger.info('No trips to display');
+    tripsGrid.innerHTML = `
+      <div class="empty-query">
+      </div>
+      <div class="empty-query">
+        <h1>No Trips Found!</h1>
+      </div>
+      <div class="empty-query">
       </div>
     `;
     return;
@@ -234,6 +252,65 @@ function setupEventListeners() {
       showMessage('Travel statistics coming soon!', 'info');
     });
   }
+
+  // Search Listener
+  const currentUser = localStorage.getItem('currentUser');
+  const user = JSON.parse(currentUser);
+  const searchForm = document.getElementById('search-form');
+  
+  searchForm.addEventListener('submit', async function(e) {
+    
+      e.preventDefault();
+      
+      const query = document.getElementById('trip-search').value;
+      const startRange = document.getElementById('trip-start-date').value;
+      const endRange = document.getElementById('trip-end-date').value;
+
+      const start = new Date(startRange);
+      const end = new Date(endRange);
+
+      if (end) {
+        if (start >= end) {
+          logger.error("Trip query failed - invalid date range", {
+            startRange,
+            endRange,
+          });
+        }
+      }
+
+      if (startRange) {
+        if (startRange < new Date()) {
+          logger.error("Trip query failed - past start date", {
+            startRange,
+          });
+        }  
+      }
+        
+
+      if (!query && !startRange && !endRange) {       
+          loadUserData(user._id);
+      } else {
+          try { 
+            let parts = [
+              query || '',              
+              startRange || '',          
+              endRange || ''             
+            ];
+            
+            const newQuery = parts.join(';');
+
+            const tripResponse = await fetch(`${appConfig.API_BASE}/trips/search/${encodeURIComponent(newQuery)}?${encodeURIComponent(user._id)}`);
+
+            if (!tripResponse.ok) throw 'Failed to fetch';
+
+            const trips = await tripResponse.json();
+            renderTrips(trips, true);
+          } catch (e) {
+            logger.error('Trip search failed', { error: e });
+            showError(e);
+          }
+      }
+  });
 
   logger.info('Dashboard event listeners setup complete');
 }

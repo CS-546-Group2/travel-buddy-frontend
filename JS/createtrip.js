@@ -1,5 +1,6 @@
 // Auth page functionality with backend integration
 import appConfig from './appConfig.js';
+import logger from './utils/logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -29,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     user.travelPreferences.interests.forEach(interest => {
-      console.log(interest);
       const checkbox = document.querySelector(`#create-interests input[type="checkbox"][value="${interest}"]`);
       if (checkbox) {
         checkbox.checked = true;
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tripForm = document.getElementById('trip-form');
 
     // Backend signup integration
-    tripForm.addEventListener('submit', function(e) {
+    tripForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get Trip Details
@@ -87,6 +87,13 @@ document.addEventListener('DOMContentLoaded', function() {
           });
         }    
 
+         const preferences = {
+          travelStyle,
+          interests,
+          budgetRange,
+          accommodationStyle
+        };
+
         logger.info('Creating new trip...', { 
             tripname,
             destination,
@@ -98,45 +105,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Call backend signup endpoint
-        fetch(`${appConfig.API_BASE}/trips/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            userId: user._id,
-            tripName: tripname,
-            destination: destination,
-            startDate: start,
-            endDate: end,
-            duration: Math.ceil((end - start) / (1000 * 60 * 60 * 24)),
-            budget: budget,
-            status: status,
-            preferences: {
-              travelStyle,
-              interests,
-              budgetRange,
-              accommodationStyle
-            }
-        })
-        })
-        .then(res => {
-        if (!res.ok) {
-            return res.json().then(err => {
-            throw new Error(err.error || 'Trip creation failed');
-            });
-        }
-        return res.json();
-        })
-        .then(data => {
-        logger.info('Trip created successfully! View your trip on the dashboard!');
-        // Redirect to dashboard
-        setTimeout(() => {
+        try {
+          const response = await fetch(`${appConfig.API_BASE}/trips/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user._id,
+              tripName: tripname,
+              destination: destination,
+              startDate: start,
+              endDate: end,
+              duration: Math.ceil((end - start) / (1000 * 60 * 60 * 24)),
+              budget: budget,
+              status: status,
+              preferences: preferences
+            })
+          });
+
+          if (!response.ok) {
+            const errData = await response.json();
+            throw (errData.error || 'Trip creation failed');
+          }
+
+          const data = await response.json();
+          logger.info('Trip created successfully! View your trip on the dashboard!');
+
+          // Redirect to dashboard
+          setTimeout(() => {
             window.location.href = './dashboard.html#trips';
-        }, 1500);
-        })
-        .catch(err => {
-        console.error('Trip creation error:', err);
-        logger.error('Trip creation error:', err);
-        });
+          }, 1500);
+        } catch (err) {
+          logger.error('Trip creation error:', err);
+        }
     });
 });
 
