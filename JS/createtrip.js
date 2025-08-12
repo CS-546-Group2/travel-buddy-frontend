@@ -101,7 +101,12 @@ document.addEventListener('DOMContentLoaded', function() {
             enddate,
             budget,
             status,
-            preferences
+            preferences: {
+              travelStyle,
+              interests,
+              budgetRange,
+              accommodationStyle
+            }
         });
 
         // Call backend signup endpoint

@@ -332,13 +332,15 @@ function createNewTrip() {
 // View trip details
 function viewTrip(tripId) {
   logger.info('View trip requested', { tripId });
-  showMessage(`Viewing trip ${tripId} - details coming soon!`, 'info');
+  window.location.href = `./viewtrip.html?tripId=${tripId}`;
+  return;
 }
 
 // Edit trip
 function editTrip(tripId) {
   logger.info('Edit trip requested', { tripId });
-  showMessage(`Editing trip ${tripId} - editor coming soon!`, 'info');
+  window.location.href = `./edittrip.html?tripId=${tripId}`;
+  return;
 }
 
 // View collaboration
@@ -351,7 +353,8 @@ function viewCollaboration(collabId) {
 function formatDate(dateString) {
   if (!dateString) return 'N/A';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
+  return date.toLocaleDateString('en-US', {
+    timeZone: 'UTC',
     month: 'short', 
     day: 'numeric',
     year: 'numeric'
@@ -441,4 +444,6 @@ style.textContent = `
     }
   }
 `;
-document.head.appendChild(style); 
+document.head.appendChild(style);
+window.viewTrip = viewTrip
+window.editTrip = editTrip
