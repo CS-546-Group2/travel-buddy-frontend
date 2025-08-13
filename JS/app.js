@@ -50,4 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     logger.debug('No user session found');
   }
+
+  // Highlight nav link on scroll
+  const hero = document.querySelector('.hero');
+  if (hero) {
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', function() {
+      let scrollY = window.pageYOffset;
+
+      sections.forEach(current => {
+        const sectionHeight = current.offsetHeight;
+        const sectionTop = current.offsetTop - 50;
+        let sectionId = current.getAttribute('id');
+
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+          document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.add('active');
+        } else {
+          document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.remove('active');
+        }
+      });
+    });
+  }
 });

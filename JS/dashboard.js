@@ -30,8 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
   // Setup event listeners
   setupEventListeners();
 
-  
-  
+  // Highlight nav link on scroll
+  const dashboardHero = document.querySelector('.dashboard-hero');
+  if (dashboardHero) {
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', function() {
+      let scrollY = window.pageYOffset;
+
+      sections.forEach(current => {
+        const sectionHeight = current.offsetHeight;
+        const sectionTop = current.offsetTop - 50;
+        let sectionId = current.getAttribute('id');
+
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+          document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.add('active');
+        } else {
+          document.querySelector('.nav-menu a[href*=' + sectionId + ']').classList.remove('active');
+        }
+      });
+    });
+  }
 });
 
 // Load user trips and collaborations
@@ -112,10 +130,6 @@ function renderTrips(trips, query) {
         <i class="fas fa-plane"></i>
         <h3>No trips yet</h3>
         <p>Start planning your first adventure!</p>
-        <button class="create-trip-btn" onclick="createNewTrip()">
-          <i class="fas fa-plus"></i>
-          <span>Create Your First Trip</span>
-        </button>
       </div>
     `;
     return;
