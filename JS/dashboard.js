@@ -130,10 +130,6 @@ function renderTrips(trips, query) {
         <i class="fas fa-plane"></i>
         <h3>No trips yet</h3>
         <p>Start planning your first adventure!</p>
-        <button class="create-trip-btn" onclick="createNewTrip()">
-          <i class="fas fa-plus"></i>
-          <span>Create Your First Trip</span>
-        </button>
       </div>
     `;
     return;
