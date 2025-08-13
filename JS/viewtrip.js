@@ -53,6 +53,83 @@ document.addEventListener('DOMContentLoaded', async function () {
       window.location.href = `./edittrip.html?tripId=${tripId}`;
     });
 
+    document.getElementById('generate-ai-content').addEventListener('click', async function () {
+      try {
+        showMessage('Generating AI content... This may take a moment.', 'info');
+
+        // Call the AI content generation endpoints
+        await Promise.all([
+          fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-itinerary`, { method: 'POST' }),
+          fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-recommendations`, { method: 'POST' }),
+          fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-tips`, { method: 'POST' }),
+        ]);
+
+        // Fetch the updated trip data
+        const response = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, { method: 'GET' });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.error || 'Trip not found');
+        }
+
+        const updatedTrip = await response.json();
+
+        // Parse and display the AI content
+        const aiContentDiv = document.getElementById('ai-content');
+        aiContentDiv.innerHTML = ''; // Clear existing content
+
+        if (updatedTrip.activities) {
+          const activities = (typeof updatedTrip.activities === 'string') ? JSON.parse(updatedTrip.activities) : updatedTrip.activities;
+          let itineraryHtml = '<h3>Itinerary</h3>';
+          activities.forEach(day => {
+            itineraryHtml += `<h4>Day ${day.day}</h4>`;
+            day.items.forEach(item => {
+              itineraryHtml += `<p><strong>${item.time}:</strong> ${item.title} (${item.type})</p>`;
+            });
+          });
+          aiContentDiv.innerHTML += itineraryHtml;
+        }
+
+        if (updatedTrip.recommendations) {
+          const recommendations = (typeof updatedTrip.recommendations === 'string') ? JSON.parse(updatedTrip.recommendations) : updatedTrip.recommendations;
+          let recsHtml = '<h3>Recommendations</h3>';
+          if (recommendations.attractions) {
+            recsHtml += '<h4>Attractions</h4>';
+            recommendations.attractions.forEach(item => {
+              recsHtml += `<p><strong>${item.name}:</strong> ${item.description}</p>`;
+            });
+          }
+          if (recommendations.restaurants) {
+            recsHtml += '<h4>Restaurants</h4>';
+            recommendations.restaurants.forEach(item => {
+              recsHtml += `<p><strong>${item.name}:</strong> ${item.description}</p>`;
+            });
+          }
+          if (recommendations.experiences) {
+            recsHtml += '<h4>Experiences</h4>';
+            recommendations.experiences.forEach(item => {
+              recsHtml += `<p><strong>${item.name}:</strong> ${item.description}</p>`;
+            });
+          }
+          aiContentDiv.innerHTML += recsHtml;
+        }
+
+        if (updatedTrip.travelTips) {
+          const travelTips = (typeof updatedTrip.travelTips === 'string') ? JSON.parse(updatedTrip.travelTips) : updatedTrip.travelTips;
+          let tipsHtml = '<h3>Travel Tips</h3>';
+          travelTips.forEach(tip => {
+            tipsHtml += `<p><strong>${tip.title}:</strong> ${tip.content}</p>`;
+          });
+          aiContentDiv.innerHTML += tipsHtml;
+        }
+
+        showMessage('AI content generated successfully!', 'success');
+      } catch (err) {
+        showMessage('Error generating AI content: ' + err.message, 'error');
+        logger.error('Error generating AI content: ' + err.message);
+      }
+    });
+
   } catch (err) {
     showMessage('Could not load trip: ' + err.message, 'error');
     logger.error('Could not load trip: ' + err.message);
