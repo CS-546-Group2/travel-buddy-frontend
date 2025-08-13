@@ -354,7 +354,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .delete-btn {
   width: 100%;
-  background: red;
+  background: #a11212;
   color: var(--white);
   border: none;
   padding: 1rem 2rem;
