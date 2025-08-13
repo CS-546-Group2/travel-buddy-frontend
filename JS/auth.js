@@ -237,6 +237,9 @@ function togglePassword(inputId) {
   }
 }
 
+// Make togglePassword available globally for onclick handlers
+window.togglePassword = togglePassword;
+
 // Message display function
 function showMessage(message, type = 'info') {
   logger.debug('Showing message to user', { type, message });

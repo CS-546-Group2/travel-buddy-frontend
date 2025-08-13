@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         generateBtn.disabled = false;
         
       } catch (err) {
-        showMessage('Error generating AI content: ' + err.message, 'error');
+        showMessage('Error generating AI content, please try again in a bit!', 'error');
         logger.error('Error generating AI content: ' + err.message);
         
         // Reset button on error
