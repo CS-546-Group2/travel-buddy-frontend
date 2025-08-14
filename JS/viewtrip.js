@@ -94,11 +94,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         generateBtn.disabled = true;
 
         // Call the AI content generation endpoints
+        // Generate the tips and recs first
         await Promise.all([
-          fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-itinerary`, { method: 'POST' }),
           fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-recommendations`, { method: 'POST' }),
           fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-tips`, { method: 'POST' }),
         ]);
+        // Generate the itinerary last
+        await fetch(`${appConfig.API_BASE}/trips/${tripId}/generate-itinerary`, { method: 'POST' });
 
         // Fetch the updated trip data
         const response = await fetch(`${appConfig.API_BASE}/trips/${tripId}`, { method: 'GET' });
