@@ -1,23 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard | Travel Buddy</title>
-    <meta name="description" content="Your personal travel dashboard - manage trips, collaborations, and plan your next adventure." />
-    
+    <meta
+      name="description"
+      content="Your personal travel dashboard - manage trips, collaborations, and plan your next adventure."
+    />
+
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="../CSS/index.css">
-    <link rel="stylesheet" href="../CSS/dashboard.css">
-    <link rel="stylesheet" href="../CSS/trip.css">
-    <link rel="stylesheet" href="../CSS/auth.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="../CSS/index.css" />
+    <link rel="stylesheet" href="../CSS/dashboard.css" />
+    <link rel="stylesheet" href="../CSS/trip.css" />
+    <link rel="stylesheet" href="../CSS/auth.css" />
   </head>
 
   <body>
@@ -28,17 +37,16 @@
           <i class="fas fa-compass nav-icon"></i>
           <span class="nav-title">Travel Buddy</span>
         </div>
-        
+
         <div class="nav-menu" id="nav-menu">
           <a href="../index.html" class="nav-link">Home</a>
           <a href="#dashboard" class="nav-link active">Dashboard</a>
           <a href="#trips" class="nav-link">My Trips</a>
           <a href="#collaborations" class="nav-link">Collaborations</a>
-          <a href="#" class="nav-link" id="user-profile">Profile</a>
           <a href="preferences.html" class="nav-link">Preferences</a>
           <a href="#" class="nav-link nav-cta" id="logout-btn">Logout</a>
         </div>
-        
+
         <div class="nav-toggle" id="nav-toggle">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -51,14 +59,16 @@
     <section class="dashboard-hero" id="dashboard">
       <div class="dashboard-container">
         <div class="welcome-section">
-          <h1 class="welcome-title">Welcome back, <span id="user-name">Traveler</span>!</h1>
+          <h1 class="welcome-title">
+            Welcome back, <span id="user-name">Traveler</span>!
+          </h1>
           <p class="welcome-subtitle">Ready to plan your next adventure?</p>
           <button class="create-trip-btn" id="create-trip-btn">
             <i class="fas fa-plus"></i>
             <span>Create New Trip</span>
           </button>
         </div>
-        
+
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon">
@@ -69,7 +79,7 @@
               <p class="stat-label">Active Trips</p>
             </div>
           </div>
-          
+
           <div class="stat-card">
             <div class="stat-icon">
               <i class="fas fa-users"></i>
@@ -79,7 +89,7 @@
               <p class="stat-label">Collaborations</p>
             </div>
           </div>
-          
+
           <div class="stat-card">
             <div class="stat-icon">
               <i class="fas fa-map-marker-alt"></i>
@@ -98,38 +108,46 @@
       <div class="trips-container">
         <div class="section-header">
           <h2 class="section-title">My Trips</h2>
-          <p class="section-subtitle">Manage your travel plans and itineraries</p>
+          <p class="section-subtitle">
+            Manage your travel plans and itineraries
+          </p>
           <div class="form-group-alt">
-              <form class="search-form" id="search-form"> 
-                  <div class="input-wrapper input-wrapper-small">
-                    <i class="fas fa-search input-icon"></i>
-                    <input type="text" id="trip-search" name="tripsearch" placeholder="Search for a trip by name, destination, etc.">
+            <form class="search-form" id="search-form">
+              <div class="input-wrapper input-wrapper-small">
+                <i class="fas fa-search input-icon"></i>
+                <input
+                  type="text"
+                  id="trip-search"
+                  name="tripsearch"
+                  placeholder="Search for a trip by name, destination, etc."
+                />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="trip-start-date">Start Date</label>
+                  <div class="input-wrapper-alt">
+                    <input type="date" id="trip-start-date" name="startdate" />
                   </div>
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label for="trip-start-date">Start Date</label>
-                      <div class="input-wrapper-alt">
-                        
-                        <input type="date" id="trip-start-date" name="startdate">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="trip-end-date">End Date</label>
-                      <div class="input-wrapper-alt">
-                        <input type="date" id="trip-end-date" name="enddate">
-                      </div>
-                    </div>
+                </div>
+                <div class="form-group">
+                  <label for="trip-end-date">End Date</label>
+                  <div class="input-wrapper-alt">
+                    <input type="date" id="trip-end-date" name="enddate" />
                   </div>
-                  <div>
-                    <button class="trip-btn primary search-btn" id="search-trip-btn">
-                      Search
-                    </button>
-                  </div>
-              </form>
-              
+                </div>
+              </div>
+              <div>
+                <button
+                  class="trip-btn primary search-btn"
+                  id="search-trip-btn"
+                >
+                  Search
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-        
+
         <div class="trips-grid" id="trips-grid">
           <!-- Trips will be loaded here dynamically -->
           <div class="loading-card">
@@ -145,9 +163,11 @@
       <div class="collaborations-container">
         <div class="section-header">
           <h2 class="section-title">Collaborations</h2>
-          <p class="section-subtitle">Trips shared with you by other travelers</p>
+          <p class="section-subtitle">
+            Trips shared with you by other travelers
+          </p>
         </div>
-        
+
         <div class="collaborations-grid" id="collaborations-grid">
           <!-- Collaborations will be loaded here dynamically -->
           <div class="loading-card">
@@ -164,26 +184,26 @@
         <div class="section-header">
           <h2 class="section-title">Quick Actions</h2>
         </div>
-        
+
         <div class="actions-grid">
           <button class="action-card" id="plan-trip-btn">
             <i class="fas fa-route"></i>
             <h3>Plan New Trip</h3>
             <p>Create a new travel itinerary</p>
           </button>
-          
+
           <button class="action-card" id="share-trip-btn">
             <i class="fas fa-share-alt"></i>
             <h3>Share Trip</h3>
             <p>Invite friends to collaborate</p>
           </button>
-          
+
           <button class="action-card" id="find-inspiration-btn">
             <i class="fas fa-lightbulb"></i>
             <h3>Get Inspiration</h3>
             <p>Discover new destinations</p>
           </button>
-          
+
           <button class="action-card" id="view-stats-btn">
             <i class="fas fa-chart-line"></i>
             <h3>Travel Stats</h3>
@@ -203,7 +223,7 @@
           </div>
           <p class="footer-tagline">Your AI-powered travel companion</p>
         </div>
-        
+
         <div class="footer-links">
           <div class="footer-section">
             <h4>Product</h4>
@@ -211,14 +231,14 @@
             <a href="#collaborations">Collaborations</a>
             <a href="#dashboard">Dashboard</a>
           </div>
-          
+
           <div class="footer-section">
             <h4>Support</h4>
             <a href="#help">Help Center</a>
             <a href="#contact">Contact</a>
             <a href="#privacy">Privacy</a>
           </div>
-          
+
           <div class="footer-section">
             <h4>Connect</h4>
             <div class="social-icons">
@@ -238,7 +258,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="footer-bottom">
         <p>&copy; 2024 Travel Buddy. All rights reserved.</p>
       </div>
@@ -247,4 +267,4 @@
     <script type="module" src="../JS/dashboard.js"></script>
     <script src="../JS/main.js"></script>
   </body>
-</html> 
+</html>

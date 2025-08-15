@@ -1,20 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login | Travel Buddy</title>
-    <meta name="description" content="Sign in or create your Travel Buddy account to start planning amazing adventures." />
-    
+    <meta
+      name="description"
+      content="Sign in or create your Travel Buddy account to start planning amazing adventures."
+    />
+
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="../CSS/auth.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="../CSS/auth.css" />
   </head>
 
   <body>
@@ -25,7 +34,7 @@
           <i class="fas fa-compass nav-icon"></i>
           <span class="nav-title">Travel Buddy</span>
         </div>
-        
+
         <div class="nav-menu">
           <a href="../index.html" class="nav-link">Home</a>
           <a href="../index.html#features" class="nav-link">Features</a>
@@ -56,7 +65,13 @@
               <label for="login-email">Email</label>
               <div class="input-wrapper">
                 <i class="fas fa-envelope input-icon"></i>
-                <input type="email" id="login-email" name="email" required placeholder="Enter your email">
+                <input
+                  type="email"
+                  id="login-email"
+                  name="email"
+                  required
+                  placeholder="Enter your email"
+                />
               </div>
             </div>
 
@@ -64,8 +79,18 @@
               <label for="login-password">Password</label>
               <div class="input-wrapper">
                 <i class="fas fa-lock input-icon"></i>
-                <input type="password" id="login-password" name="password" required placeholder="Enter your password">
-                <button type="button" class="password-toggle" onclick="togglePassword('login-password')">
+                <input
+                  type="password"
+                  id="login-password"
+                  name="password"
+                  required
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('login-password')"
+                >
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -73,7 +98,7 @@
 
             <div class="form-options">
               <label class="checkbox-wrapper">
-                <input type="checkbox" name="remember">
+                <input type="checkbox" name="remember" />
                 <span class="checkmark"></span>
                 Remember me
               </label>
@@ -97,7 +122,13 @@
               <label for="signup-username">Username</label>
               <div class="input-wrapper">
                 <i class="fas fa-user input-icon"></i>
-                <input type="text" id="signup-username" name="username" required placeholder="Choose a username">
+                <input
+                  type="text"
+                  id="signup-username"
+                  name="username"
+                  required
+                  placeholder="Choose a username"
+                />
               </div>
             </div>
 
@@ -106,14 +137,26 @@
                 <label for="signup-firstname">First Name</label>
                 <div class="input-wrapper">
                   <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="signup-firstname" name="firstname" required placeholder="First name">
+                  <input
+                    type="text"
+                    id="signup-firstname"
+                    name="firstname"
+                    required
+                    placeholder="First name"
+                  />
                 </div>
               </div>
               <div class="form-group">
                 <label for="signup-lastname">Last Name</label>
                 <div class="input-wrapper">
                   <i class="fas fa-user input-icon"></i>
-                  <input type="text" id="signup-lastname" name="lastname" required placeholder="Last name">
+                  <input
+                    type="text"
+                    id="signup-lastname"
+                    name="lastname"
+                    required
+                    placeholder="Last name"
+                  />
                 </div>
               </div>
             </div>
@@ -122,7 +165,13 @@
               <label for="signup-email">Email</label>
               <div class="input-wrapper">
                 <i class="fas fa-envelope input-icon"></i>
-                <input type="email" id="signup-email" name="email" required placeholder="Enter your email">
+                <input
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  required
+                  placeholder="Enter your email"
+                />
               </div>
             </div>
 
@@ -130,7 +179,14 @@
               <label for="signup-age">Age</label>
               <div class="input-wrapper">
                 <i class="fas fa-calendar input-icon"></i>
-                <input type="number" id="signup-age" name="age" min="13" max="120" placeholder="Your age (optional)">
+                <input
+                  type="number"
+                  id="signup-age"
+                  name="age"
+                  min="13"
+                  max="120"
+                  placeholder="Your age (optional)"
+                />
               </div>
             </div>
 
@@ -138,8 +194,18 @@
               <label for="signup-password">Password</label>
               <div class="input-wrapper">
                 <i class="fas fa-lock input-icon"></i>
-                <input type="password" id="signup-password" name="password" required placeholder="Create a password">
-                <button type="button" class="password-toggle" onclick="togglePassword('signup-password')">
+                <input
+                  type="password"
+                  id="signup-password"
+                  name="password"
+                  required
+                  placeholder="Create a password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('signup-password')"
+                >
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -149,8 +215,18 @@
               <label for="signup-confirm">Confirm Password</label>
               <div class="input-wrapper">
                 <i class="fas fa-lock input-icon"></i>
-                <input type="password" id="signup-confirm" name="confirm" required placeholder="Confirm your password">
-                <button type="button" class="password-toggle" onclick="togglePassword('signup-confirm')">
+                <input
+                  type="password"
+                  id="signup-confirm"
+                  name="confirm"
+                  required
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('signup-confirm')"
+                >
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -177,31 +253,54 @@
             <div class="form-group">
               <label>Interests (select all that apply)</label>
               <div class="checkbox-group" id="signup-interests">
-                <label><input type="checkbox" value="food"> Food</label>
-                <label><input type="checkbox" value="culture"> Culture</label>
-                <label><input type="checkbox" value="adventure"> Adventure</label>
-                <label><input type="checkbox" value="nature"> Nature</label>
-                <label><input type="checkbox" value="nightlife"> Nightlife</label>
-                <label><input type="checkbox" value="history"> History</label>
-                <label><input type="checkbox" value="wellness"> Wellness</label>
-                <label><input type="checkbox" value="photography"> Photography</label>
-                <label><input type="checkbox" value="shopping"> Shopping</label>
-                <label><input type="checkbox" value="sports"> Sports</label>
-                <label><input type="checkbox" value="art"> Art</label>
-                <label><input type="checkbox" value="music"> Music</label>
-                <label><input type="checkbox" value="architecture"> Architecture</label>
-                <label><input type="checkbox" value="beaches"> Beaches</label>
-                <label><input type="checkbox" value="mountains"> Mountains</label>
-                <label><input type="checkbox" value="cities"> Cities</label>
-                <label><input type="checkbox" value="rural"> Rural</label>
-                <label><input type="checkbox" value="temples"> Temples</label>
-                <label><input type="checkbox" value="museums"> Museums</label>
-                <label><input type="checkbox" value="local-experiences"> Local Experiences</label>
+                <label><input type="checkbox" value="food" /> Food</label>
+                <label><input type="checkbox" value="culture" /> Culture</label>
+                <label
+                  ><input type="checkbox" value="adventure" /> Adventure</label
+                >
+                <label><input type="checkbox" value="nature" /> Nature</label>
+                <label
+                  ><input type="checkbox" value="nightlife" /> Nightlife</label
+                >
+                <label><input type="checkbox" value="history" /> History</label>
+                <label
+                  ><input type="checkbox" value="wellness" /> Wellness</label
+                >
+                <label
+                  ><input type="checkbox" value="photography" />
+                  Photography</label
+                >
+                <label
+                  ><input type="checkbox" value="shopping" /> Shopping</label
+                >
+                <label><input type="checkbox" value="sports" /> Sports</label>
+                <label><input type="checkbox" value="art" /> Art</label>
+                <label><input type="checkbox" value="music" /> Music</label>
+                <label
+                  ><input type="checkbox" value="architecture" />
+                  Architecture</label
+                >
+                <label><input type="checkbox" value="beaches" /> Beaches</label>
+                <label
+                  ><input type="checkbox" value="mountains" /> Mountains</label
+                >
+                <label><input type="checkbox" value="cities" /> Cities</label>
+                <label><input type="checkbox" value="rural" /> Rural</label>
+                <label><input type="checkbox" value="temples" /> Temples</label>
+                <label><input type="checkbox" value="museums" /> Museums</label>
+                <label
+                  ><input type="checkbox" value="local-experiences" /> Local
+                  Experiences</label
+                >
               </div>
             </div>
             <div class="form-group">
               <label>Accommodation Style</label>
-              <select id="signup-accommodation" name="accommodationStyle" required>
+              <select
+                id="signup-accommodation"
+                name="accommodationStyle"
+                required
+              >
                 <option value="hotels">Hotels</option>
                 <option value="hostels">Hostels</option>
                 <option value="vacation-rentals">Vacation Rentals</option>
@@ -226,7 +325,9 @@
               <label>Accessibility Needs</label>
               <select id="signup-accessibility" name="accessibilityNeeds">
                 <option value="none">None</option>
-                <option value="wheelchair-accessible">Wheelchair Accessible</option>
+                <option value="wheelchair-accessible">
+                  Wheelchair Accessible
+                </option>
                 <option value="mobility-assistance">Mobility Assistance</option>
                 <option value="visual-impairment">Visual Impairment</option>
                 <option value="hearing-impairment">Hearing Impairment</option>
@@ -235,9 +336,10 @@
 
             <div class="form-options">
               <label class="checkbox-wrapper">
-                <input type="checkbox" name="terms" required>
+                <input type="checkbox" name="terms" required />
                 <span class="checkmark"></span>
-                I agree to the <a href="#" class="terms-link">Terms & Conditions</a>
+                I agree to the
+                <a href="#" class="terms-link">Terms & Conditions</a>
               </label>
             </div>
 

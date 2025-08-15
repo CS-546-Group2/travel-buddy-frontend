@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -36,7 +36,6 @@
           <a href="#" class="nav-link">Features</a>
           <a href="#" class="nav-link">Reviews</a>
           <a href="dashboard.html" class="nav-link">Dashboard</a>
-          <a href="profile.html" class="nav-link">Profile</a>
           <a href="preferences.html" class="nav-link">Preferences</a>
           <a href="#" class="nav-link nav-cta">Logout</a>
         </div>
@@ -63,7 +62,11 @@
           </select>
 
           <label>Accommodation Style</label>
-          <select name="accommodationStyle" id="select-accommodation-style" required>
+          <select
+            name="accommodationStyle"
+            id="select-accommodation-style"
+            required
+          >
             <option value="hotels">Hotels</option>
             <option value="hostels">Hostels</option>
             <option value="vacation-rentals">Vacation Rentals</option>
@@ -72,31 +75,39 @@
 
           <label>Interests</label>
           <div class="checkbox-group" id="select-interests">
-              <label><input type="checkbox" value="food"> Food</label>
-              <label><input type="checkbox" value="culture"> Culture</label>
-              <label><input type="checkbox" value="adventure"> Adventure</label>
-              <label><input type="checkbox" value="nature"> Nature</label>
-              <label><input type="checkbox" value="nightlife"> Nightlife</label>
-              <label><input type="checkbox" value="history"> History</label>
-              <label><input type="checkbox" value="wellness"> Wellness</label>
-              <label><input type="checkbox" value="photography"> Photography</label>
-              <label><input type="checkbox" value="shopping"> Shopping</label>
-              <label><input type="checkbox" value="sports"> Sports</label>
-              <label><input type="checkbox" value="art"> Art</label>
-              <label><input type="checkbox" value="music"> Music</label>
-              <label><input type="checkbox" value="architecture"> Architecture</label>
-              <label><input type="checkbox" value="beaches"> Beaches</label>
-              <label><input type="checkbox" value="mountains"> Mountains</label>
-              <label><input type="checkbox" value="cities"> Cities</label>
-              <label><input type="checkbox" value="rural"> Rural</label>
-              <label><input type="checkbox" value="temples"> Temples</label>
-              <label><input type="checkbox" value="museums"> Museums</label>
-              <label><input type="checkbox" value="local-experiences"> Local Experiences</label>
+            <label><input type="checkbox" value="food" /> Food</label>
+            <label><input type="checkbox" value="culture" /> Culture</label>
+            <label><input type="checkbox" value="adventure" /> Adventure</label>
+            <label><input type="checkbox" value="nature" /> Nature</label>
+            <label><input type="checkbox" value="nightlife" /> Nightlife</label>
+            <label><input type="checkbox" value="history" /> History</label>
+            <label><input type="checkbox" value="wellness" /> Wellness</label>
+            <label
+              ><input type="checkbox" value="photography" /> Photography</label
+            >
+            <label><input type="checkbox" value="shopping" /> Shopping</label>
+            <label><input type="checkbox" value="sports" /> Sports</label>
+            <label><input type="checkbox" value="art" /> Art</label>
+            <label><input type="checkbox" value="music" /> Music</label>
+            <label
+              ><input type="checkbox" value="architecture" />
+              Architecture</label
+            >
+            <label><input type="checkbox" value="beaches" /> Beaches</label>
+            <label><input type="checkbox" value="mountains" /> Mountains</label>
+            <label><input type="checkbox" value="cities" /> Cities</label>
+            <label><input type="checkbox" value="rural" /> Rural</label>
+            <label><input type="checkbox" value="temples" /> Temples</label>
+            <label><input type="checkbox" value="museums" /> Museums</label>
+            <label
+              ><input type="checkbox" value="local-experiences" /> Local
+              Experiences</label
+            >
           </div>
 
           <button type="submit" class="auth-btn">Save Preferences</button>
         </form>
-        <p id="successMsg" style="display: none;">Preferences saved!</p>
+        <p id="successMsg" style="display: none">Preferences saved!</p>
       </div>
     </main>
 

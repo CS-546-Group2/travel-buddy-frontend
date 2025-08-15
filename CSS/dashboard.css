@@ -363,16 +363,16 @@
   .welcome-title {
     font-size: 2rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .trips-grid,
   .collaborations-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .actions-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -382,17 +382,17 @@
   .dashboard-hero {
     padding: 100px 1rem 60px;
   }
-  
+
   .welcome-title {
     font-size: 1.8rem;
   }
-  
+
   .actions-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stat-card {
     flex-direction: column;
     text-align: center;
   }
-} 
+}

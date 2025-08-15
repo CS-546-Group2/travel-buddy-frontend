@@ -31,14 +31,13 @@
 
 .statusInput {
   width: 100%;
-  padding:1rem 0.875rem 0.75rem 2.5rem;
+  padding: 1rem 0.875rem 0.75rem 2.5rem;
   border: 2px solid #e1e5e9;
   border-radius: 12px;
   font-size: 1rem;
   background: var(--white);
   color: var(--text-dark);
   transition: all 0.3s ease;
-  
 }
 
 .statusInput:focus {
@@ -50,7 +49,7 @@
 .form-group-alt {
   display: flex;
   flex-direction: column;
-  justify-content: center;;
+  justify-content: center;
   align-items: center;
   margin-top: 2.5rem;
 }
@@ -64,14 +63,14 @@
 .search-btn {
   width: 6.5rem;
   height: 2.5rem;
-  font-weight: bold;;
+  font-weight: bold;
   border-radius: 20px;
 }
 
 .empty-query {
   text-align: center;
   justify-content: center;
-  display:flex;
+  display: flex;
   width: 100%;
 }
 
@@ -171,7 +170,7 @@
 }
 
 .recommendation-item:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--primary);
 }
 
@@ -291,6 +290,10 @@
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
